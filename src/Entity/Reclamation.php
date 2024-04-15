@@ -6,6 +6,8 @@ use App\Repository\ReclamationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass=ReclamationRepository::class)
@@ -21,23 +23,34 @@ class Reclamation
 
     /**
      * @ORM\Column(type="string", length=255)
+     *  @Assert\Regex(
+     *      pattern="/^[^a-z].*$/",
+     *      message="La description ne peut pas commencer par une lettre minuscule."
+     * )
      */
     private $description;
 
     /**
      * @ORM\Column(type="integer")
+     *  @Assert\Range(
+     *      max = 10,
+     *      maxMessage = "L'avis ne peut pas dépasser 10."
+     * )
      */
+   
     private $avis;
 
     /**
      * @ORM\Column(type="date")
+    
      */
     private $daterec;
 
     /**
      * @ORM\OneToMany(targetEntity=Reponse::class, mappedBy="idRec")
+     
      */
-    private $idRep;
+    private  $idRep;
 
     public function __construct()
     {
