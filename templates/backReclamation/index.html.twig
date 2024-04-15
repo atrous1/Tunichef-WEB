@@ -1,0 +1,42 @@
+{% extends 'back.html.twig' %}
+
+{% block title %}Reclamation {% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="text-center mt-80">Réclamations</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Avis</th>
+                    <th>Date de la réclamation</th>
+                    <th>Réponse</th> 
+                </tr>
+            </thead>
+            <tbody>
+            {% for reclamation in reclamations %}
+                <tr>
+                    <td>{{ reclamation.description }}</td>
+                    <td>{{ reclamation.avis }}</td>
+                    <td>{{ reclamation.daterec ? reclamation.daterec|date('Y-m-d') : '' }}</td>
+                    <td>
+                        {% for idRep in reclamation.idRep %}
+                            {{ idRep.id }}{% if not loop.last %} / {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">No records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="text-center ">
+            <a class="nav-link btn btn-success create-new-button" id="createbuttonDropdown" href="{{ path('app_reclamation_indexack') }}">Bonne journée </a>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'back.html.twig' %}
+
+{% block title %}Reponse {% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="text-center mt-100">Reponse</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Contenu</th>
+                    <th>Date de la réponse</th>
+                    <th>ID de la réclamation</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for reponse in reponses %}
+                <tr>
+                    <td class="align-middle">{{ reponse.contenu }}</td>
+                    <td class="align-middle">{{ reponse.dateRep ? reponse.dateRep|date('Y-m-d') : '' }}</td>
+                    <td class="align-middle">{{ reponse.idRec.getId() }}</td>
+                    <td class="align-middle">
+                        <a href="{{ path('app_reponse_showback', {'id': reponse.id}) }}">Afficher</a>
+                        <a href="{{ path('app_reponse_editback', {'id': reponse.id}) }}">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4" class="text-center">No records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <a href="{{ path('app_reponse_newback') }}" class="btn btn-primary">Ajouter une réponse </a>
+        </div>
+    </div>
+{% endblock %}

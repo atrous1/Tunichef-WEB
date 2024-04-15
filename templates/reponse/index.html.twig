@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reponse index{% endblock %}
+
+{% block content %}
+    <h1>Réponse </h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+              
+                <th>Contenu de la réponse</th>
+                <th>Date de la réponse</th>
+                <th>ID de la réclamation</th>
+             
+            </tr>
+        </thead>
+        <tbody>
+        {% for reponse in reponses %}
+            <tr>
+              
+                <td>{{ reponse.contenu }}</td>
+                <td>{{ reponse.dateRep ? reponse.dateRep|date('Y-m-d') : '' }}</td>
+                <td>{{ reponse.idRec.getId() }}</td>
+
+              
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">No records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+ 
+
+    {% include 'footer.html.twig' %}
+{% endblock %}

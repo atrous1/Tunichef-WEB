@@ -1,0 +1,10 @@
+local:
+    environment:
+        # Other environment settings...
+        variables:
+            # Other variables...
+            APP_ENV: 'dev'
+            APP_DEBUG: '1'
+    http:
+        host: '127.0.0.1'
+        port: 8001

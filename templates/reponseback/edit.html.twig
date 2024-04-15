@@ -1,0 +1,36 @@
+{% extends 'back.html.twig' %}
+
+{% block title %}Edit Reponse{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h1 class="text-center">Modifier réponse</h1>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Contenu</th>
+                            <th>Date de la réponse</th>
+                            <th>ID de la réclamation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ include('reponse/_form.html.twig', {'button_label': 'Modifier'}) }}</td>
+                            <td></td> <!-- Ajoutez d'autres colonnes ici selon vos besoins -->
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="text-center">
+                    <a href="{{ path('app_reponse_indexback') }}" class="btn btn-secondary">Revenir à la liste</a>
+                </div>
+
+                {{ include('reponseback/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

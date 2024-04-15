@@ -1,0 +1,18 @@
+{% extends 'back.html.twig' %}
+
+{% block title %}New Reponse{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <div>
+            <h1>Ajouter une nouvelle réponse</h1>
+
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button class="btn">{{ button_label|default('Enregistrer') }}</button>
+            {{ form_end(form) }}
+            
+            <a href="{{ path('app_reponse_indexback') }}">Revenir à la liste</a>
+        </div>
+    </div>
+{% endblock %}
