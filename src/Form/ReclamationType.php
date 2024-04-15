@@ -10,6 +10,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use App\Entity\Reponse;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 
 class ReclamationType extends AbstractType
@@ -18,7 +20,14 @@ class ReclamationType extends AbstractType
     {
         $builder
             ->add('description')
-            ->add('avis')
+            ->add('avis', null, [ // Utilisez 'null' pour laisser Symfony déduire automatiquement le type du champ
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => 10,
+                        'maxMessage' => 'L\'avis ne doit pas dépasser 10 caractères.'
+                    ]),
+                ],
+            ])
             ->add('daterec')
             ->add('idRep', EntityType::class, [
                 'class' => Reponse::class,
