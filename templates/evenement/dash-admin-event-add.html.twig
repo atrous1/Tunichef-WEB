@@ -1,0 +1,85 @@
+{% extends 'back.html.twig' %} 
+
+{% block title %}Hello EvenementController!{%endblock %} 
+
+{% block content %}
+
+<div class="event-list-container">
+    <h1 class="event-list-header-title">Add New Event</h1>
+     {{form_start(formEvent,{'attr':{'novalidate':'novalidate'}})}}
+            <div class="mb-3">
+              <label for="nom" class="form-label">Nom </label>
+              {# <input type="text" class="form-control" id="nom" /> #}
+              {{form_widget(formEvent.eventName,{'attr':{'class':'form-control','placeholder':"Name"}})}}
+              {% if form_errors(formEvent.eventName) is not empty %}
+                <div class="form_errors-product">
+                  {{form_errors(formEvent.eventName)}}
+                </div>
+              {% endif %}
+              
+            </div>
+            <div class="mb-3">
+              <label for="description" class="form-label">Description</label>
+              {{form_widget(formEvent.description,{'attr':{'class':'form-control textarea','placeholder':"Description"}})}}
+            {% if form_errors(formEvent.description) is not empty %}
+              <div class="form_errors-product">
+                {{form_errors(formEvent.description)}}
+              </div>
+            {% endif %}
+            </div>
+
+
+              <label for="prixp" class="form-label">Image</label>
+
+             <div class="mb-3 display-flex">
+              <div class="prouct-add-form-image__container">
+                <img
+                  class="prouct-add-form-image__img"
+                  src=""
+                  alt=""
+                  id="prouct-add-form-image__img"
+                  style="display: none"
+                />
+
+              </div>
+
+              <div class="prouct-add-form-image__add">
+                  {{ form_label(formEvent.image, 'Choose a photo:', {'label_attr': {'class': 'prouct-add-form-image__addBtn','for': 'prouct-add-form-image__file-btn'}}) }}
+                  {{form_widget(formEvent.image,{'attr':{'class':'prouct-add-form-image__file-btn','name':'prouct-add-form-image__file-btn','id':'prouct-add-form-image__file-btn', 'style':'display:none'}})}}
+                  {% if form_errors(formEvent.image) is not empty %}
+                    <div class="form_errors-product">
+                      {{form_errors(formEvent.image)}}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+
+
+            {# <button type="submit" class="btn btn-primary">Sign in</button> #}
+            <button type="submit" class="btn btn-primary">
+            {{button_label | default('Add Event')}}
+            </button>
+          {{form_end(formEvent)}}
+
+</div>
+
+<script>
+
+    var fileInput = document.querySelector('.prouct-add-form-image__file-btn');
+    var imgElement = document.getElementById('prouct-add-form-image__img');
+
+    fileInput.addEventListener('change', function(event) {
+        console.log("test");
+        var file = event.target.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+            imgElement.src = e.target.result;
+            imgElement.style.display = "block";
+        };
+
+        reader.readAsDataURL(file);
+    });
+
+    </script>
+{% endblock %}

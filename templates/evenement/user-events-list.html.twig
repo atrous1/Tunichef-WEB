@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block content %} 
+
+<div class="user-events-container">
+  <h1 class="user-events-title">Events List</h1>
+  <div class="user-events-list">
+    {% for event in events %} 
+      <div class="user-event-card">
+        <div class="user-event-card__image-container">
+          <img src="{{asset('./uploads/files/') ~ event.image}}" class="user-event-card__image" alt="" />
+        </div>
+        <h4 class="user-event-card__title">{{event.eventName}}</h4>
+        <div class="user-event-card__promo">discount on <b style="color:#0f172b"> {{event.promotions|length}}</b> products</div>
+        <a href="{{path('user_eventDetail',{'id': event.eventID})}}" class="btn btn-primary py-sm-3 px-sm-5  animated ">Details</a>
+      </div>
+    {% endfor %}
+
+    
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'back.html.twig' %} 
+
+{% block title %}Hello EvenementController!{%endblock %} 
+
+{% block content %}
+
+<div class="event-list-container">
+  <div class="event-list-header">
+    <h1 class="event-list-header-title">Event promo list</h1>
+   <a href="{{path('add_promo', {'id': app.request.attributes.get('id')})}}" class="add-new-event">Add New Promo</a>
+  </div>
+
+  <div class="row">
+    <div class="col-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          {# <h4 class="card-title">Order Status</h4> #}
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Product Image</th>
+                  <th>Product Name</th>
+                  <th>Promotion Name</th>
+                  <th>Discount %</th>
+                  <th>Product Price</th>
+                  <th>#</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for promo in promotions %} 
+                <tr>
+                  <td>
+                    <img src="{{asset('./uploads/files/') ~ promo.getProduit().getImage_produit()}}" style="width: 100px; height: 100px" />
+                  </td>
+                  <td>{{promo.getProduit().getNom_produit()}}</td>
+                  <td>{{promo.promotionName}}</td>
+                  <td>{{promo.prix}} %</td>
+                  <td>
+                    <p class="user-event-card__price-before" style="font-weight:400">${{promo.getProduit().getPrix_produit()}}</p>
+                    <p class="user-event-card__price-after" style="font-weight:400">${{promo.getProduit().getPrix_produit() - (promo.getProduit().getPrix_produit() * promo.getPrix() / 100)   }}</p>
+                  </td>
+
+                  <td>
+           
+
+                    <a href="{{ path('deletePromo', {'id': app.request.attributes.get('id'), 'idPromo': promo.promotionId}) }}">
+                      <button type="button" class="btn btn-outline-danger">
+                        Delete
+                      </button>
+                    </a>
+
+                    <a href="{{ path('update_promo', {'id': app.request.attributes.get('id'), 'idPromo': promo.promotionId}) }}">
+                      <button type="button" class="btn btn-outline-warning">
+                        Edit
+                      </button>
+                    </a>
+                  </td>
+                </tr>
+                {% else %} 
+                 <tr>
+                  <td colspan="5">no records found</td>
+                </tr>
+                {% endfor %} 
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

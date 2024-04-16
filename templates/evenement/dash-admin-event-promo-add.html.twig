@@ -1,0 +1,46 @@
+{% extends 'back.html.twig' %} 
+
+{% block title %}Hello EvenementController!{%endblock %} 
+
+{% block content %}
+
+<div class="event-list-container">
+    <h1 class="event-list-header-title">Add New Promo</h1>
+     {{form_start(formPromo,{'attr':{'novalidate':'novalidate'}})}}
+            <div class="mb-3">
+              <label for="nom" class="form-label">Nom </label>
+              {# <input type="text" class="form-control" id="nom" /> #}
+              {{form_widget(formPromo.promotionName,{'attr':{'class':'form-control','placeholder':"Name"}})}}
+              {% if form_errors(formPromo.promotionName) is not empty %}
+                <div class="form_errors-product">
+                  {{form_errors(formPromo.promotionName)}}
+                </div>
+              {% endif %}
+              
+            </div>
+
+            <div class="mb-3">
+              <label for="nom" class="form-label">Product </label>
+              {{ form_widget(formPromo.produit, {'attr': {'class': 'form-control'}}) }}
+              
+            </div>
+            
+            <div class="mb-3">
+              <label for="prix_promo" class="form-label">Discount</label>
+              {{form_widget(formPromo.prix,{'attr':{'class':'form-control','placeholder':"Discount %"}})}}
+              {% if form_errors(formPromo.prix) is not empty %}
+                <div class="form_errors-product">
+                  {{form_errors(formPromo.prix)}}
+                </div>
+              {% endif %}
+            </div>
+
+
+            <button type="submit" class="btn btn-primary">
+            {{button_label | default('Add Promo')}}
+            </button>
+          {{form_end(formPromo)}}
+
+</div>
+
+{% endblock %}

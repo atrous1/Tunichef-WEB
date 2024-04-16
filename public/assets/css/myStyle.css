@@ -1,0 +1,147 @@
+.event-list-container {
+  width: 100%;
+  height: auto;
+  background-color: #282b33;
+  padding-top: 5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.event-list-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.input-search-event {
+  background: #191c24;
+  padding: 13px 20px 11px 20px;
+  border: 1px solid #2c2e33;
+  color: #fff;
+  width: 20rem;
+  border-radius: 0.5rem;
+}
+
+.dash-admin__event___img {
+  width: 100px;
+  height: 100px;
+}
+
+.event-list-header-title {
+  margin-right: 2rem;
+}
+.add-new-event {
+  color: #fff;
+  background-color: #00d25b;
+  padding: 0.3rem 0.8rem;
+  border-radius: 0.2rem;
+  text-decoration: none;
+  margin-right: auto;
+}
+
+.promo-btn {
+  color: #00d25b;
+}
+
+.form_errors-product {
+  color: #eb1616;
+  padding-top: 0.5rem;
+}
+
+.prouct-add-form-image__container {
+  width: 10rem;
+  height: 10rem;
+  border: 1px solid #343a40;
+}
+
+.prouct-add-form-image__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.prouct-add-form-image__addBtn {
+  color: #eb1616;
+  cursor: pointer;
+}
+
+.prouct-add-form-image__addBtn:hover {
+  text-decoration: underline;
+}
+
+.form-control {
+  color: #fff !important;
+}
+
+.user-events-container {
+  width: 100%;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.user-events-list {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.user-event-card {
+  width: calc(25% - 1.5rem);
+  height: 24.5rem;
+  /* border: 1px solid #fea116; */
+  border-radius: 0.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 0.2rem 0.5rem rgb(0, 0, 0, 0.2);
+}
+
+.user-event-card__image-container {
+  width: 100%;
+  height: 13rem;
+  background-color: #00d25b;
+  border-radius: 0.2rem;
+  margin-bottom: 1rem;
+}
+
+.user-event-card__image {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.2rem;
+}
+
+.user-event-card__title {
+  color: #0f172b;
+  margin-bottom: 1rem;
+}
+
+.user-event-card__promo {
+  margin-bottom: 1rem;
+}
+
+.user-event-card__promotion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 3rem;
+}
+
+.user-event-card__price {
+  display: flex;
+  gap: 1rem;
+}
+
+.user-event-card__price-before {
+  color: #eb1616;
+  text-decoration: line-through;
+  font-weight: 700;
+}
+
+.user-event-card__price-after {
+  color: #4fc281;
+  font-weight: 700;
+}

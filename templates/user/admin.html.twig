@@ -1,0 +1,64 @@
+{% extends 'back.html.twig' %}
+
+{% block content %}
+
+<div class="row ">
+              <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Order Status</h4>
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th> Nom </th>
+                            <th> Prenom </th>
+                            <th> Email </th>
+                            <th> Password </th>
+                            <th> Num Tel </th>
+                            <th> Image </th>
+                            <th> Actions </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                                <tr>
+                                    <td>{{ user.nom }}</td>
+                                    <td>{{ user.prenom }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.password }}</td>
+                                    <td>{{ user.numtel }}</td>
+
+
+                                    {% if user.image %}
+                                    <td><img src="{{ asset('images/' ~ user.image) }}" style="width:100px;height:100px;"></td>
+                                    {% else %}
+                                    <td>No image available</td>
+                                    {% endif %}
+                                    <td>
+                                    <a href="javascript:void(0)" onclick="if(confirm('are you sure to delete this reclamation ?')){window.location='{{ path('app_user_deleteB', {'id': user.id }) }}';}">
+                                        <button type="button" class="btn btn-outline-danger">Delete</button> </a>
+
+                                    <a href="{{ path('app_user_editB', {'id': user.id }) }}" >
+                                        <button type="button" class="btn btn-outline-warning">Edit</button> </a>
+
+                                    </td>
+                                    
+
+
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="5">no records found</td>
+                                    </tr>
+                            {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+{% endblock %}

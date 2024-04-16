@@ -1,0 +1,162 @@
+{% extends 'back.html.twig' %} 
+
+{% block title %}Hello EvenementController!{%endblock %} 
+
+ {% block events_active%}active {% endblock %} 
+
+
+{% block content %}
+
+<div class="event-list-container">
+  <div class="event-list-header">
+    <h1 class="event-list-header-title">Event list</h1>
+   <a href="{{path('add_event')}}" class="add-new-event">Add New Event</a>
+   <input type="search" class="input-search-event" placeholder="Search" />
+  </div>
+
+  <div class="row">
+    <div class="col-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          {# <h4 class="card-title">Order Status</h4> #}
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Name</th>
+                  <th>Date</th>
+                  <th>Description</th>
+                  <th>Promotion</th>
+                  <th>#</th>
+                </tr>
+              </thead>
+              <tbody class="listeEvents">
+                {% for event in events %} 
+                <tr>
+                  <td>
+                    <img src="{{asset('./uploads/files/') ~ event.image}}" class="dash-admin__event___img"  />
+                  </td>
+                  <td>{{event.eventName}}</td>
+                  <td>{{event.eventDate | date('d/m/Y')}}</td>
+                  <td>{{event.description}}</td>
+                  <td><a href="{{path('dash_eventPromo',{'id': event.eventID})}}" class="promo-btn">Promotions</a></td>
+                  <td>
+
+                  <a href="{{path('facebook_share',{'id': event.eventID})}}" class="btn btn-primary">                     
+                        Share fb
+                    </a>
+
+                    <a href="{{path('deleteEvent',{'id': event.eventID})}}" class="btn btn-outline-danger">
+                        Delete
+                    </a>
+
+                    <a href="{{path('update_event',{'id': event.eventID})}}" class="btn btn-outline-warning">
+                        Edit
+                    </a>
+                  </td>
+                </tr>
+                {% else %} 
+                 <tr>
+                  <td colspan="5">no records found</td>
+                </tr>
+                {% endfor %} 
+                
+              </tbody>
+
+              <tbody class="listeEvents2">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+   <script>
+    $(document).ready(function () {
+      $(".input-search-event").keyup(function (e) {
+        var value = $(this).val();
+        console.log(value);
+
+        $.ajax({
+          type: "GET",
+          url: "{{ path('searchEvent') }}",
+          data: { searchEventData: value },
+
+          success: function (result) {
+            console.log("result");
+            if (result) {
+              console.log(result);
+
+              $(".listeEvents").empty();
+              $(".listeEvents").hide();
+              $(".listeEvents2").empty();
+              $(".listeEvents2").show();
+
+               $.each(JSON.parse(result), function (i, obj) {
+                console.log(obj);
+
+
+                var $newTr = $("<tr></tr>");
+
+                var $newTd1 = $("<td></td>");
+                var $newImg = $("<img />").addClass("dash-admin__event___img");
+                var imagePath = "{{ asset('uploads/files/') }}" + obj.image;
+                $newImg.attr("src", imagePath);
+
+
+                var $newTd2 = $("<td>" + obj.eventName + "</td>");
+                var $newTd3 = $("<td>" + obj.eventDate + "</td>");
+                var $newTd4 = $("<td>" + obj.description + "</td>");
+                
+                var $newTd5 = $("<td></td>");
+                var $promoLink = $("<a></a>").attr("href",  "/dash/admin/eventPromo/" + obj.eventID + "" ).addClass("promo-btn").text("Promotions");
+
+                var $newTd6 = $("<td></td>");  
+                var $shareFbLink = $("<a></a>").attr("href",  "/facebook_share/" + obj.eventID + "" ).addClass("btn btn-primary").text("Share fb");
+                var $deleteLink = $("<a></a>").attr("href",  "/dash/admin/events/deleteEvent/" + obj.eventID + "" ).addClass("btn btn-outline-danger").text("Delete");
+                var $editLink = $("<a></a>").attr("href",  "/dash/admin/event/update/" + obj.eventID + "" ).addClass("btn btn-outline-warning").text("Edit");
+
+
+            
+           
+                $(".listeEvents2").append($newTr);
+
+               
+                $newTr.append($newTd1);
+                $newTd1.append($newImg);
+                
+                $newTr.append($newTd2);
+                $newTr.append($newTd3);
+                $newTr.append($newTd4);
+                
+                $newTr.append($newTd5);
+                $newTd5.append($promoLink);
+
+                $newTr.append($newTd6);
+                $newTd6.append($shareFbLink);
+                $newTd6.append($deleteLink);
+                $newTd6.append($editLink);
+
+
+
+              });
+            }
+          },
+          error: function (xhr, status, error) {
+            console.log("Error: " + error);
+          },
+        });
+
+
+      });
+    });
+  </script>
+{% endblock %}
