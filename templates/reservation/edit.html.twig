@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Reclamation{% endblock %}
+
+{% block content %}
+<main id="main" class="main">
+<br><br><br><br>
+    <h1>Edit Reclamation</h1>
+    
+    <table class="table">
+    {{ form_start(form,{attr:{novalidate:'novalidate'}}) }}
+        <tbody>
+            <tr>
+                <th>Nom Reservation</th>
+                <td>{{ form_widget(form.nom_reservation) }}</td>
+            </tr>
+            <tr>
+                <th>Num Tel</th>
+                <td>{{ form_widget(form.num_tel) }}</td>
+            </tr>
+            <tr>
+                <th>Num Table</th>
+                <td>{{ form_widget(form.num_table) }}
+                <div class="text-danger">{{ form_errors(form.num_table) }}</div></td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ form_widget(form.calendrier) }}
+                <div class="text-danger">{{ form_errors(form.calendrier) }}</div></td>
+            </tr>
+            
+        </tbody>
+
+    </table>
+    
+    <br>
+
+    {{ form_end(form) }}
+
+    <br><br>
+    
+    <button href="{{ path('app_reservationBack') }}" type="button" class="btn btn-secondary">Back to list</button>
+
+
+    </main>
+{% endblock %}

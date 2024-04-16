@@ -1,3 +1,59 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+
+app_reservation:
+  path: /reservation
+  controller: App\Controller\ReservationController::index
+
+app_tables:
+  path: /tables
+  controller: App\Controller\ReservationController::tables
+
+app_addReservation:
+  path: /reservation/{id}
+  controller: App\Controller\ReservationController::addReservation
+
+app_show:
+  path: /showAll
+  controller: App\Controller\ProduitController::show
+
+app_panier:
+  path: /panier
+  controller: App\Controller\CommandeController::index
+
+PanierAdd:
+  path: /add/{id}
+  controller: App\Controller\CommandeController::add
+
+PanierRemove:
+  path: /remove/{id}
+  controller: App\Controller\CommandeController::remove
+
+PanierDelete:
+  path: /delete/{id}
+  controller: App\Controller\CommandeController::delete
+
+PanierDeleteAll:
+  path: /deleteAll
+  controller: App\Controller\CommandeController::deleteAll
+
+app_reservationBack:
+  path: /back
+  controller: App\Controller\ReservationController::back
+
+app_reservation_edit:
+  path: /{id}/edit
+  controller: App\Controller\ReservationController::edit
+
+app_reservation_editB:
+  path: /{id}/editB
+  controller: App\Controller\ReservationController::editB
+
+app_reservation_delete:
+  path: /deleteF/{id}
+  controller: App\Controller\ReservationController::delete
+
+app_reservation_deleteB:
+  path: /deleteB/{id}
+  controller: App\Controller\ReservationController::deleteB

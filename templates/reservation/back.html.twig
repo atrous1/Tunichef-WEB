@@ -1,0 +1,62 @@
+{% extends 'back.html.twig' %}
+
+{% block content %}
+<div class="content-wrapper">
+<div class="row ">
+              <div class="col-12 grid-margin">
+                <div class="body">
+                  <div class="card-body">
+                    <br>
+                    <br>
+                    <h4 class="card-title">List of Reservations</h4>
+                    <br>
+                    <br>
+                    <div class="input-group">
+  
+  <br>
+  <br>
+  </div>
+
+                    <div class="table-responsive">
+                      <table id="results" class="table">
+                        <thead>
+                          <tr>
+                            <th style="font-weight: bold;"> Nom Reservation </th>
+                            <th style="font-weight: bold;"> Num Table </th>
+                            <th style="font-weight: bold;"> Num Tel </th>
+                            <th style="font-weight: bold;"> Date de Reservation </th>
+                            <th style="font-weight: bold;"> Actions </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% for reservation in reservations %}
+                                <tr>
+                                    <td>{{ reservation.getNomReservation() }}</td>
+                                    <td>{{ reservation.getNumTable() }}</td>
+                                    <td>{{ reservation.getNumTel() }}</td>
+                                    <td>{{ reservation.calendrier ? reservation.calendrier|date('Y-m-d') : '' }}</td>
+
+
+                                    <td>
+                                    <a href="javascript:void(0)" onclick="if(confirm('Are you sure to delete this reservation ?')){window.location='{{ path('app_reservation_deleteB', {'id': reservation.id }) }}';}">
+                                        <button type="button" class="btn btn-outline-danger">Delete</button> </a>
+
+                                    <a href="{{ path('app_reservation_editB', {'id': reservation.id }) }}" >
+                                        <button type="button" class="btn btn-outline-warning">Edit</button> </a>
+
+                                    </td>
+                                    
+
+
+                                    </tr>
+
+                            {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+</div>
+{% endblock %}
