@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon profil</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-image: linear-gradient(rgba(15, 23, 43, .9), rgba(15, 23, 43, .9)), url('assets/img/bg-hero.jpg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: Arial, sans-serif; /* Police de caractères par défaut */
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.2); /* Couleur de fond glass-like */
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Ombre portée */
+    padding: 40px;
+    max-width: 500px;
+    width: 80%; /* Largeur du container ajustée */
+    margin: 50px auto;
+    color: white; /* Couleur du texte */
+}
+
+.container h1 {
+    text-align: center; /* Alignement du titre au centre */
+}
+
+.container table {
+    width: 100%; /* Largeur de la table à 100% */
+}
+
+.container th {
+    text-align: left; /* Alignement des cellules d'en-tête à gauche */
+}
+
+.container td {
+    text-align: center; /* Alignement des cellules de données au centre */
+    padding: 10px; /* Espacement intérieur des cellules */
+}
+
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <h2>Mon profil</h2>
+    <table>
+        <tbody>
+            <tr>
+                <th>Nom</th>
+                <td>{{ user.nom }}</td>
+            </tr>
+            <tr>
+                <th>Prénom</th>
+                <td>{{ user.prenom }}</td>
+            </tr>
+            <tr>
+                <th>Adresse mail</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>Numéro de téléphone</th>
+                <td>{{ user.numtel}}</td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                {% if user.image %}
+                                    <td><img src="{{ asset('uploads/files/' ~ user.image) }}" style="width:100px;height:100px;"></td>
+                                    {% else %}
+                                    <td>No image available</td>
+                                    {% endif %}
+            </tr>
+        </tbody>
+    </table>
+    
+<div class="text-center">
+    <a class="btn btn-primary mb-2" href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier mon profil</a>
+</div>
+
+<div class="text-center mb-2">
+    <form method="post" action="{{ path('app_user_deleteF', {'id': user.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+        <button class="btn btn-danger">Désactiver mon compte</button>
+    </form>
+</div>
+<div class="text-center">
+    <a href="{{ path('app_home') }}">Back to home</a>
+</div>
+    
+
+
+</form>
+
+</form>
+
+
+    
+    </div>
+</body>
+</html>

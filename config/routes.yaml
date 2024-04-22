@@ -1,0 +1,106 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+app_user:
+  path: /user
+  controller: App\Controller\UserController::index
+
+app_home:
+  path: /home
+  controller: App\Controller\UserController::home
+  
+app_profil:
+  path: /profil/{id}
+  controller: App\Controller\UserController::profil
+
+app_user_front:
+  path: /user/front
+  controller: App\Controller\UserController::front
+
+app_user_back:
+  path: /user/back
+  controller: App\Controller\UserController::back
+
+app_user_add:
+  path: /user/add
+  controller: App\Controller\UserController::Add
+
+app_user_edit:
+  path: /user/edit/{id}
+  controller: App\Controller\UserController::edit
+
+app_user_editB:
+  path: /user/editB/{id}
+  controller: App\Controller\UserController::editBack
+
+app_user_deleteF:
+  path: /user/delete/{id}
+  controller: App\Controller\UserController::deleteFront
+
+app_user_deleteB:
+  path: /user/deleteB/{id}
+  controller: App\Controller\UserController::deleteBack
+
+app_login:
+    path: /login
+    controller: App\Controller\SecurityController::login
+
+app_logout:
+    path: /logout
+    controller: App\Controller\CustomSecurityController::logout
+
+app_user_search:
+  path: /user/search
+  controller: App\Controller\UserController::searchUser
+
+#  Tri id asc
+utilisateur_display_sorted_by_id_asc:
+    path: /sorted_by_id_asc
+    controller: App\Controller\UserController::displaySortedByIdASC
+
+#  Tri nom asc
+utilisateur_display_sorted_by_nom_asc:
+    path: /sorted_by_nom_asc
+    controller: App\Controller\UserController::displaySortedByNomASC
+
+#  Tri prenom asc
+utilisateur_display_sorted_by_prenom_asc:
+    path: /sorted_by_prenom_asc
+    controller: App\Controller\UserController::displaySortedByPrenomASC
+
+#  Tri num asc
+utilisateur_display_sorted_by_num_asc:
+    path: /sorted_by_num_asc
+    controller: App\Controller\UserController::displaySortedByNumASC
+
+#  Tri id desc
+utilisateur_display_sorted_by_id_desc:
+    path: /sorted_by_id_desc
+    controller: App\Controller\UserController::displaySortedByIdDESC
+
+#  Tri nom desc
+utilisateur_display_sorted_by_nom_desc:
+    path: /sorted_by_nom_desc
+    controller: App\Controller\UserController::displaySortedByNomDESC
+
+#  Tri prenom desc
+utilisateur_display_sorted_by_prenom_desc:
+    path: /sorted_by_prenom_desc
+    controller: App\Controller\UserController::displaySortedByPrenomDESC
+
+#  Tri num desc
+utilisateur_display_sorted_by_num_desc:
+    path: /sorted_by_num_desc
+    controller: App\Controller\UserController::displaySortedByNumDESC
+
+app_forgot_password_request:
+  path: /reset-password/request
+  controller: App\Controller\ResetPasswordController::request
+
+app_check_email:
+  path: /reset-password/check-email
+  controller: App\Controller\ResetPasswordController::checkEmail
+
+app_reset_password:
+  path: /reset-password/reset/{token}
+  controller: App\Controller\ResetPasswordController::reset

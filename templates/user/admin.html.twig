@@ -1,0 +1,111 @@
+{% extends 'back.html.twig' %}
+
+{% block content %}
+<div class="content-wrapper">
+<div class="row ">
+              <div class="col-12 grid-margin">
+                <div class="body">
+                  <div class="card-body">
+                    <br>
+                    <br>
+                    <h4 class="card-title">List of users</h4>
+                    <br>
+                    <div>
+                      <label for="search-input">Rechercher un utilisateur :</label>
+                      <input type="text" id="search" placeholder="Recherche par nom..." style="background-color: #2A3038; color: white; border: 1px; border-radius: 5px; padding: 5px; width: 300px;">
+                    </div>
+                    <br>
+                    <div class="input-group">
+  <div class="col-md-6">
+    <select id="tri" onchange="sortUsers()" style="background-color: #2A3038; color: white; border: 1px; border-radius: 5px; padding: 5px; width: 500px;">>
+      <option value="">Trier les utilisateurs selon ...</option>
+      <option value="{{ path('utilisateur_display_sorted_by_id_asc') }}">Identifiant croissant</option>
+      <option value="{{ path('utilisateur_display_sorted_by_id_desc') }}">Identifiant décroissant</option>
+      <option value="{{ path('utilisateur_display_sorted_by_nom_asc') }}">Nom croissant</option>
+      <option value="{{ path('utilisateur_display_sorted_by_nom_desc') }}">Nom décroissant</option>
+      <option value="{{ path('utilisateur_display_sorted_by_prenom_asc') }}">Prénom croissante</option>
+      <option value="{{ path('utilisateur_display_sorted_by_prenom_desc') }}">Prénom décroissante</option>
+      <option value="{{ path('utilisateur_display_sorted_by_num_asc') }}">Numéro de téléphone croissant</option>
+      <option value="{{ path('utilisateur_display_sorted_by_num_desc') }}">Numéro de téléphone décroissant</option>
+    </select>
+  </div>
+  <br>
+  
+  </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#search').keyup(function() {
+            var query = $(this).val();
+            $.ajax({
+                url: "{{ path('app_user_search') }}",
+                type: "POST",
+                data: {query: query},
+                success: function(data) {
+                    $('#results').html(data);
+                    $('#results').css('width', '100%');
+                    $('#results').css('position', 'static');
+                }
+            });
+        });
+    });
+</script>
+                    <div class="table-responsive">
+                      <table id="results" class="table">
+                        <thead>
+                          <tr>
+                            <th style="font-weight: bold;"> Nom </th>
+                            <th style="font-weight: bold;"> Prenom </th>
+                            <th style="font-weight: bold;"> Email </th>
+                            <th style="font-weight: bold;"> Num Tel </th>
+                            <th style="font-weight: bold;"> Image </th>
+                            <th style="font-weight: bold;"> Actions </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                                <tr>
+                                    <td>{{ user.nom }}</td>
+                                    <td>{{ user.prenom }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.numtel }}</td>
+
+
+                                    {% if user.image %}
+                                    <td><img src="{{ asset('uploads/files/' ~ user.image) }}" style="width:100px;height:100px;"></td>
+                                    {% else %}
+                                    <td>No image available</td>
+                                    {% endif %}
+                                    <td>
+                                    <a href="javascript:void(0)" onclick="if(confirm('Are you sure to delete this user ?')){window.location='{{ path('app_user_deleteB', {'id': user.id }) }}';}">
+                                        <button type="button" class="btn btn-outline-danger">Delete</button> </a>
+
+                                    <a href="{{ path('app_user_editB', {'id': user.id }) }}" >
+                                        <button type="button" class="btn btn-outline-warning">Edit</button> </a>
+
+                                    </td>
+                                    
+
+
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="5">no records found</td>
+                                    </tr>
+                            {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+</div>
+<script>
+  function sortUsers() {
+  var select = document.getElementById("tri");
+  var selectedOption = select.options[select.selectedIndex];
+  window.location.href = selectedOption.value;
+  }
+  </script>
+{% endblock %}
