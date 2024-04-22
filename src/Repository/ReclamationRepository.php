@@ -7,6 +7,8 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Twilio\Rest\Client;
+
 
 /**
  * @extends ServiceEntityRepository<Reclamation>
@@ -46,7 +48,30 @@ class ReclamationRepository extends ServiceEntityRepository
             $this->_em->flush();
         }
     }
+    public function findByAvis( $Avis)
+{
+    return $this-> createQueryBuilder('e')
+        ->andWhere('e.Avis LIKE :Avis')
+        ->setParameter('Avis','%' .$Avis. '%')
+        ->getQuery()
+        ->execute();
+}
 
+public function SortByAvis(){
+    return $this->createQueryBuilder('e')
+        ->orderBy('e.Avis','ASC')
+        ->getQuery()
+        ->getResult()
+        ;
+}
+public function SortByDescription()
+{
+    return $this->createQueryBuilder('e')
+        ->orderBy('e.Description','ASC')
+        ->getQuery()
+        ->getResult()
+        ;
+}
     // /**
     //  * @return Reclamation[] Returns an array of Reclamation objects
     //  */
@@ -75,4 +100,26 @@ class ReclamationRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function sms(){
+        // Your Account SID and Auth Token from twilio.com/console
+                $sid = 'AC5f30c61a472e288900d2e1fb14d3b5b3';
+                $auth_token = '348eab68dd79dd13eb813691337783d5';
+        // In production, these should be environment variables. E.g.:
+        // $auth_token = $_ENV["TWILIO_AUTH_TOKEN"]
+        // A Twilio number you own with SMS capabilities
+                $twilio_number = "+17573472962";
+        
+                $client = new Client($sid, $auth_token);
+                $client->messages->create(
+                // the number you'd like to send the message to
+                    '+21620427036',
+                    [
+                        // A Twilio phone number you purchased at twilio.com/console
+                        'from' => '+17573472962',
+                        // the body of the text message you'd like to send
+                        'body' => 'Une reclamation a été ajoutée avec succée !'
+                    ]
+                );
+            }
+
 }

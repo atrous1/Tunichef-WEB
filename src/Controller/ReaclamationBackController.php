@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ReaclamationBackController extends AbstractController
 {
      /**
-     * @Route("/", name="app_reclamation_indexack", methods={"GET"})
+     * @Route("/", name="app_reclamation_indexack", methods={"GET","POST"})
      */
     public function index(ReclamationRepository $reclamationRepository): Response
     {
@@ -87,7 +87,58 @@ class ReaclamationBackController extends AbstractController
 
         return $this->redirectToRoute('app_reclamation_indexack', [], Response::HTTP_SEE_OTHER);
     }
+    /*
+    public function index1(EntityManagerInterface $entityManager,Request $request,ReclamationRepository $ReclamationRepository): Response
+    {
+        $Reclamations = $entityManager
+            ->getRepository(PReclamation::class)
+            ->findAll();
+
+            /////////
+            $back = null;
+            
+            if($request->isMethod("POST")){
+                if ( $request->request->get('optionsRadios')){
+                    $SortKey = $request->request->get('optionsRadios');
+                    switch ($SortKey){
+                        case 'Avis':
+                            $Reclamations = $ReclamationRepository->SortByAvis();
+                            break;
+    
+                     
+    
+                    }
+                }
+                else
+                {
+                    $type = $request->request->get('optionsearch');
+                    $value = $request->request->get('Search');
+                    switch ($type){
+                        
+    
+    
+                        case 'Avis':
+                            $Reclamations = $ReclamationRepository->findByAvis($value);
+                            break;
+                        
+                     
+    
+                    }
+                }
+
+                if ( $produits){
+                    $back = "success";
+                }else{
+                    $back = "failure";
+                }
+            }
+                ////////
+
+        return $this->render('Reclamation/show.html.twig', [
+            'Reclamations' => $Reclamations, 'back'=> $back
+        ]);
+    }
+    */
+
 }
-
-
 
