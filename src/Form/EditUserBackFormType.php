@@ -13,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
-class UserFormType extends AbstractType
+class EditUserBackFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -34,10 +34,6 @@ class UserFormType extends AbstractType
             ])
             ->add('email', TextType::class, [
                 'label' => 'Adresse mail',
-                
-            ])
-            ->add('password', PasswordType::class, [
-                'label' => 'Mot de passe',
                 
             ])
             ->add('image', FileType::class, [

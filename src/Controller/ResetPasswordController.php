@@ -19,6 +19,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\ResetPassword\Controller\ResetPasswordControllerTrait;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 #[Route('/reset-password')]
 class ResetPasswordController extends AbstractController
@@ -27,8 +28,10 @@ class ResetPasswordController extends AbstractController
 
     public function __construct(
         private ResetPasswordHelperInterface $resetPasswordHelper,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private SessionInterface $session
     ) {
+        $this->session = $session;
     }
 
     /**
@@ -76,7 +79,7 @@ class ResetPasswordController extends AbstractController
     #[Route('/reset/{token}', name: 'app_reset_password')]
     public function reset(Request $request, UserPasswordHasherInterface $passwordHasher, TranslatorInterface $translator, string $token = null): Response
     {
-        if ($token) {
+        /*if ($token) {
             // We store the token in session and remove it from the URL, to avoid the URL being
             // loaded in a browser and potentially leaking the token to 3rd party JavaScript.
             $this->storeTokenInSession($token);
@@ -84,7 +87,15 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute('app_reset_password');
         }
 
-        $token = $this->getTokenFromSession();
+        $token = $this->getTokenFromSession();*/
+        // Récupérer le token à partir de la session
+        
+        if (!$token && $this->session->has('reset_password_token')) {
+            $token = $this->session->get('reset_password_token');
+            // Supprimer le token de la session après l'avoir récupéré
+            $this->session->remove('reset_password_token');
+        }
+
         if (null === $token) {
             throw $this->createNotFoundException('No reset password token found in the URL or in the session.');
         }

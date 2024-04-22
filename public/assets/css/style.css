@@ -158,6 +158,18 @@
     background-size: cover;
 }
 
+.hero-header-edit {
+    background: linear-gradient(rgba(15, 23, 43, .9), rgba(15, 23, 43, .9)), url('../img/bg-hero.jpg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size:auto;
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* Utilisez 100vh pour spécifier 100% de la hauteur de la fenêtre */
+} 
+
+
+
 .hero-header img {
     animation: imgRotate 50s linear infinite;
 }

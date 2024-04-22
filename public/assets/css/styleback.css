@@ -8955,7 +8955,7 @@ progress {
 .form-text {
   margin-top: 0.25rem;
   font-size: 0.875em;
-  color: #6c757d; }
+  color: #e3e6e9; }
 
 .form-control, .asColorPicker-input, .dataTables_wrapper select, .jsgrid .jsgrid-table .jsgrid-filter-row input[type=text],
 .jsgrid .jsgrid-table .jsgrid-filter-row select, .jsgrid .jsgrid-table .jsgrid-filter-row input[type=number], .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--single .select2-search__field, .typeahead,
@@ -8967,7 +8967,7 @@ progress {
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1;
-  color: #212529;
+  color: #ffffff;
   background-color: #2A3038;
   background-clip: padding-box;
   border: 1px solid #2c2e33;
@@ -8994,7 +8994,7 @@ progress {
   .jsgrid .jsgrid-table .jsgrid-filter-row select:focus, .jsgrid .jsgrid-table .jsgrid-filter-row input:focus[type=number], .select2-container--default .select2-selection--single:focus, .select2-container--default .select2-selection--single .select2-search__field:focus, .typeahead:focus,
   .tt-query:focus,
   .tt-hint:focus {
-    color: #212529;
+    color: #ffffff;
     background-color: #fff;
     border-color: #86b7fe;
     outline: 0;
@@ -9008,7 +9008,7 @@ progress {
   .jsgrid .jsgrid-table .jsgrid-filter-row select::placeholder, .jsgrid .jsgrid-table .jsgrid-filter-row input[type=number]::placeholder, .select2-container--default .select2-selection--single::placeholder, .select2-container--default .select2-selection--single .select2-search__field::placeholder, .typeahead::placeholder,
   .tt-query::placeholder,
   .tt-hint::placeholder {
-    color: #4b5564;
+    color: #ffffff;
     opacity: 1; }
   .form-control:disabled, .asColorPicker-input:disabled, .dataTables_wrapper select:disabled, .jsgrid .jsgrid-table .jsgrid-filter-row input:disabled[type=text],
   .jsgrid .jsgrid-table .jsgrid-filter-row select:disabled, .jsgrid .jsgrid-table .jsgrid-filter-row input:disabled[type=number], .select2-container--default .select2-selection--single:disabled, .select2-container--default .select2-selection--single .select2-search__field:disabled, .typeahead:disabled,
@@ -9026,7 +9026,7 @@ progress {
     padding: 0.56rem 0.75rem;
     margin: -0.56rem -0.75rem;
     margin-inline-end: 0.75rem;
-    color: #212529;
+    color: #ffffff;
     background-color: #e9ecef;
     pointer-events: none;
     border-color: inherit;
@@ -9080,7 +9080,7 @@ progress {
   padding: 0.56rem 0;
   margin-bottom: 0;
   line-height: 1;
-  color: #212529;
+  color: #ffffff;
   background-color: transparent;
   border: solid transparent;
   border-width: 1px 0; }
@@ -20811,7 +20811,10 @@ div.tagsinput {
 
 .container-scroller {
   display: flex;
-  position: relative; }
+  position: relative;
+  overflow-x: auto;
+  white-space: nowrap;
+}
 
 .main-panel {
   transition: width 0.25s ease, margin 0.25s ease;
@@ -20832,6 +20835,7 @@ div.tagsinput {
   padding: 1.875rem 1.75rem;
   width: 100%;
   -webkit-flex-grow: 1;
-  flex-grow: 1; }
+  flex-grow: 1; 
+}
 
 /*# sourceMappingURL=maps/style.css.map */

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -50,6 +51,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private ?array $roles = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $statut = null;
 
     public function getId(): ?int
     {
@@ -109,7 +116,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRole(): ?string
     {
-        return $this->role ?? 'ROLE_CLIENT';
+        return $this->role ?? 'CLIENT';
     }
 
     public function setRole(string $role): static
@@ -198,9 +205,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
          */
         public function getRoles(): array
         {
-                $roles = $this->role;
+                $roles = $this->roles;
                 // guarantee every user at least has ROLE_USER
-                $roles[] = 'ROLE_CLIENT';
+                $roles[] = 'CLIENT';
 
                 return array_unique($roles);
         }
@@ -210,5 +217,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $this->roles = $roles;
 
                 return $this;
+        }
+
+        public function getStatut(): ?string
+        {
+            return $this->statut;
+        }
+
+        public function setStatut(?string $statut): static
+        {
+            $this->statut = $statut;
+
+            return $this;
         }
 }

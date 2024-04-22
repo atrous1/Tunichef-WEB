@@ -21,6 +21,26 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
+    public function searchByNom($query)
+    {
+    return $this->createQueryBuilder('s')
+        ->andWhere('s.nom LIKE :query')
+        ->setParameter('query', $query.'%')
+        ->orderBy('s.nom', 'ASC')
+        ->getQuery()
+        ->getResult();
+    }
+
+    public function getStatsByStatut()
+    {
+    $qb = $this->createQueryBuilder('u')
+        ->select('u.statut as status, COUNT(u) as count')
+        ->groupBy('u.statut');
+
+    return $qb->getQuery()->getResult();
+    }
+
+
 //    /**
 //     * @return User[] Returns an array of User objects
 //     */

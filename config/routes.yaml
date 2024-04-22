@@ -8,6 +8,10 @@ app_user:
 app_home:
   path: /home
   controller: App\Controller\UserController::home
+  
+app_profil:
+  path: /profil/{id}
+  controller: App\Controller\UserController::profil
 
 app_user_front:
   path: /user/front
@@ -16,10 +20,6 @@ app_user_front:
 app_user_back:
   path: /user/back
   controller: App\Controller\UserController::back
-
-app_user_delete:
-  path: /user/delete/{id}
-  controller: App\Controller\UserController::delete
 
 app_user_add:
   path: /user/add
@@ -48,3 +48,75 @@ app_login:
 app_logout:
     path: /logout
     controller: App\Controller\CustomSecurityController::logout
+
+app_user_search:
+  path: /user/search
+  controller: App\Controller\UserController::searchUser
+
+#  Tri id asc
+utilisateur_display_sorted_by_id_asc:
+    path: /sorted_by_id_asc
+    controller: App\Controller\UserController::displaySortedByIdASC
+
+#  Tri nom asc
+utilisateur_display_sorted_by_nom_asc:
+    path: /sorted_by_nom_asc
+    controller: App\Controller\UserController::displaySortedByNomASC
+
+#  Tri prenom asc
+utilisateur_display_sorted_by_prenom_asc:
+    path: /sorted_by_prenom_asc
+    controller: App\Controller\UserController::displaySortedByPrenomASC
+
+#  Tri num asc
+utilisateur_display_sorted_by_num_asc:
+    path: /sorted_by_num_asc
+    controller: App\Controller\UserController::displaySortedByNumASC
+
+#  Tri id desc
+utilisateur_display_sorted_by_id_desc:
+    path: /sorted_by_id_desc
+    controller: App\Controller\UserController::displaySortedByIdDESC
+
+#  Tri nom desc
+utilisateur_display_sorted_by_nom_desc:
+    path: /sorted_by_nom_desc
+    controller: App\Controller\UserController::displaySortedByNomDESC
+
+#  Tri prenom desc
+utilisateur_display_sorted_by_prenom_desc:
+    path: /sorted_by_prenom_desc
+    controller: App\Controller\UserController::displaySortedByPrenomDESC
+
+#  Tri num desc
+utilisateur_display_sorted_by_num_desc:
+    path: /sorted_by_num_desc
+    controller: App\Controller\UserController::displaySortedByNumDESC
+
+app_forgot_password_request:
+  path: /reset-password/request
+  controller: App\Controller\ResetPasswordController::request
+
+app_check_email:
+  path: /reset-password/check-email
+  controller: App\Controller\ResetPasswordController::checkEmail
+
+app_reset_password:
+  path: /reset-password/reset/{token}
+  controller: App\Controller\ResetPasswordController::reset
+
+app_promote_to_admin:
+  path: user/promote-to-admin/{id}
+  controller: App\Controller\UserController::promoteToAdmin
+
+app_user_ban:
+  path: user/ban/{id}
+  controller: App\Controller\UserController::ban
+  
+app_user_active:
+  path: user/active/{id}
+  controller: App\Controller\UserController::active
+
+app_user_stat:
+    path: /user/stats
+    controller: App\Controller\UserController::stats
