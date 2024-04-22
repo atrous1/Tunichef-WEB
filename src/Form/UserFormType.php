@@ -57,7 +57,8 @@ class UserFormType extends AbstractType
                 ],
             ])
             
-            ->add('Soumettre', SubmitType::class);
+            ->add('Soumettre', SubmitType::class)
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -14,11 +14,6 @@ use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use App\Form\EditUserBackFormType;
-
 
 class UserController extends AbstractController
 {
@@ -61,8 +56,6 @@ class UserController extends AbstractController
             }
             
             $User->setPassword($passwordEncoder->encodePassword($User, $User->getPassword()));
-            $User->setRole("CLIENT");
-            $User->setStatut("ACTIF");
             $em->persist($User);
             $em->flush();
             return $this->redirectToRoute('app_login');
@@ -124,7 +117,7 @@ class UserController extends AbstractController
         
         $user=$repository->find($id);
         $originalFile = $user->getImage();
-        $form=$this->createForm(EditUserBackFormType::class,$user);
+        $form=$this->createForm(UserFormType::class,$user);
         $form->handleRequest($request);
         if ($form->isSubmitted()&& $form->isValid()){ 
             $em=$doctrine->getManager();
@@ -168,23 +161,15 @@ class UserController extends AbstractController
 
 
     #[Route('/user/delete/{id}', name: 'app_user_deleteF')]
-    public function deleteFront($id, UserRepository $UserRepository, Request $request, EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, AuthenticationUtils $authenticationUtils)
+    public function deleteFront($id, Request $request, UserRepository $UserRepository)
     {
-        $utilisateur = $UserRepository->find($id);
-        if ($this->isCsrfTokenValid('delete' . $utilisateur->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($utilisateur);
-            $entityManager->flush();
 
-            // Déconnexion manuelle de l'utilisateur
-            $tokenStorage->setToken(null);
-            $request->getSession()->invalidate();
-
-            // Rediriger vers une page de confirmation après la suppression
-            $this->addFlash('success', 'Votre compte a été supprimé avec succès.');
-            return $this->render('user/account_deleted.html.twig');
-        }
-        //return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
-        return $this->render('user/signup.html.twig');
+        $user = $UserRepository->find($id);
+        $em = $this->getDoctrine()->getManager();
+        
+        $em->remove($user);
+        $em->flush();
+        return $this->redirectToRoute('app_user_front');
     }
 
     #[Route('/user/deleteB/{id}', name: 'app_user_deleteB')]
@@ -199,170 +184,11 @@ class UserController extends AbstractController
         return $this->redirectToRoute('app_user_back');
     }
 
-    #[Route('/home', name: 'app_home', methods: ["GET", "POST"])]
+    #[Route('/home', name: 'app_home')]
     public function home(): Response
     {
-        $user = $this->getUser();
-
         return $this->render('user/home.html.twig', [
-            'user' => $user,
+            'controller_name' => 'UserController',
         ]);
     }
-
-    #[Route('/profil/{id}', name: 'app_profil')]
-    public function profil($id, UserRepository $UserRepository): Response
-    {
-        $user = $UserRepository->find($id);
-        return $this->render('user/profil.html.twig', [
-            'user' => $user,
-        ]);
-    }
-
-    #[Route('/user/search', name: 'app_user_search')]
-    public function searchUser(Request $request, UserRepository $repository): Response
-    {
-        $query = $request->request->get('query');
-        $users = $repository->searchByNom($query);
-        return $this->render('user/search.html.twig', [
-            'users' => $users
-        ]);
-    }
-
-    public function displaySortedByIdASC(Request $request)
-    {
-        $users = $this->getDoctrine()->getRepository(User::class)->findBy([], ['id' => 'ASC']);
-        
-        return $this->render('user/admin.html.twig', [
-            'users' => $users,
-        ]);
-    }
-
-    public function displaySortedByNomASC(Request $request)
-    {
-        $users = $this->getDoctrine()->getRepository(User::class)->findBy([], ['nom' => 'ASC']);
-        
-        return $this->render('user/admin.html.twig', [
-            'users' => $users,
-        ]);
-    }
-
-    public function displaySortedByPrenomASC(Request $request)
-    {
-        $users = $this->getDoctrine()->getRepository(User::class)->findBy([], ['prenom' => 'ASC']);
-        
-        return $this->render('user/admin.html.twig', [
-            'users' => $users,
-        ]);
-    }
-
-    public function displaySortedByNumASC(Request $request)
-    {
-        $users = $this->getDoctrine()->getRepository(User::class)->findBy([], ['numtel' => 'ASC']);
-        
-        return $this->render('user/admin.html.twig', [
-            'users' => $users,
-        ]);
-    }
-
-    public function displaySortedByIdDESC(Request $request)
-    {
-        $users = $this->getDoctrine()->getRepository(User::class)->findBy([], ['id' => 'DESC']);
-        
-        return $this->render('user/admin.html.twig', [
-            'users' => $users,
-        ]);
-    }
-
-    public function displaySortedByNomDESC(Request $request)
-    {
-        $users = $this->getDoctrine()->getRepository(User::class)->findBy([], ['nom' => 'DESC']);
-        
-        return $this->render('user/admin.html.twig', [
-            'users' => $users,
-        ]);
-    }
-
-    public function displaySortedByPrenomDESC(Request $request)
-    {
-        $users = $this->getDoctrine()->getRepository(User::class)->findBy([], ['prenom' => 'DESC']);
-        
-        return $this->render('user/admin.html.twig', [
-            'users' => $users,
-        ]);
-    }
-
-    public function displaySortedByNumDESC(Request $request)
-    {
-        $users = $this->getDoctrine()->getRepository(User::class)->findBy([], ['numtel' => 'DESC']);
-        
-        return $this->render('user/admin.html.twig', [
-            'users' => $users,
-        ]);
-    }
-
-    #[Route('user/promote-to-admin/{id}', name: 'app_promote_to_admin')]
-public function promoteToAdmin($id): RedirectResponse
-{
-    // Récupérez l'utilisateur à partir de l'identifiant
-    $user = $this->getDoctrine()->getRepository(User::class)->find($id);
-
-    // Mettez à jour le rôle de l'utilisateur en 'ADMIN'
-    $user->setRole('ADMIN');
-
-    // Enregistrez les modifications dans la base de données
-    $entityManager = $this->getDoctrine()->getManager();
-    $entityManager->flush();
-
-    // Redirigez vers une page de confirmation ou une autre page appropriée
-    return $this->redirectToRoute('app_user_back');
 }
-
-#[Route('user/ban/{id}', name: 'app_user_ban')]
-public function ban($id): RedirectResponse
-{
-    // Récupérez l'utilisateur à partir de l'identifiant
-    $user = $this->getDoctrine()->getRepository(User::class)->find($id);
-
-    // Mettez à jour le rôle de l'utilisateur en 'ADMIN'
-    $user->setStatut('BANNED');
-
-    // Enregistrez les modifications dans la base de données
-    $entityManager = $this->getDoctrine()->getManager();
-    $entityManager->flush();
-
-    // Redirigez vers une page de confirmation ou une autre page appropriée
-    return $this->redirectToRoute('app_user_back');
-}
-
-#[Route('user/active/{id}', name: 'app_user_active')]
-public function active($id): RedirectResponse
-{
-    // Récupérez l'utilisateur à partir de l'identifiant
-    $user = $this->getDoctrine()->getRepository(User::class)->find($id);
-
-    // Mettez à jour le rôle de l'utilisateur en 'ADMIN'
-    $user->setStatut('ACTIVE');
-
-    // Enregistrez les modifications dans la base de données
-    $entityManager = $this->getDoctrine()->getManager();
-    $entityManager->flush();
-
-    // Redirigez vers une page de confirmation ou une autre page appropriée
-    return $this->redirectToRoute('app_user_back');
-}
-
-    #[Route('/user/stats', name: 'app_user_stat')]
-    public function stats(UserRepository $userRepository)
-    {
-    $stats = $userRepository->getStatsByStatut();
-
-    return $this->render('user/stats.html.twig', [
-        'stats' => $stats,
-    ]);
-    }
-
-
-}
-
-
-

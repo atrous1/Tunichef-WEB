@@ -3,32 +3,31 @@
 {% block title %}Edit User{% endblock %}
 
 {% block content %}
-<div class="content-wrapper">
 <main id="main" class="main">
-    <br>
-    <br>
-    <br>
-    <h4 class="card-title">Edit User</h4>
+    <h1>Edit User</h1>
     
     <table class="table">
-    {{ form_start(form, { attr: { novalidate: 'novalidate' } }) }}
+    {{ form_start(form,{attr:{novalidate:'novalidate'}}) }}
         <tbody>
             <tr>
                 <th>Nom</th>
-                <td>{{ form_widget(form.nom, { attr: { style: 'background-color: #ced4da; border-radius: 5px;' } }) }}</td>
-
+                <td>{{ form_widget(form.nom) }}</td>
             </tr>
             <tr>
                 <th>Prenom</th>
-                <td>{{ form_widget(form.prenom, { attr: { style: 'background-color: #ced4da; border-radius: 5px;' } }) }}
+                <td>{{ form_widget(form.prenom) }}
             </tr>
             <tr>
                 <th>Email</th>
-                <td>{{ form_widget(form.email, { attr: { style: 'background-color: #ced4da; border-radius: 5px;' } }) }}</td>
+                <td>{{ form_widget(form.email) }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ form_widget(form.password) }}</td>
             </tr>
             <tr>
                 <th>Num Tel</th>
-                <td>{{ form_widget(form.numtel, { attr: { style: 'background-color: #ced4da; border-radius: 5px;' } }) }}
+                <td>{{ form_widget(form.numtel) }}
             </tr>
             <tr>
                 <th>Image</th>
@@ -37,16 +36,13 @@
             
         </tbody>
 
-
     </table>
     
-    {{ form_row(form.Soumettre, { attr: { class: 'btn btn-primary' } }) }}
-   
 
     {{ form_end(form) }}
-    <br>
-    <a class="btn btn-danger" href="{{ path('app_user_deleteF', {'id': user.id}) }}">Supprimer</a>
 
+    
+
+    <a href="{{ path('app_user_deleteF', {'id': user.id}) }}"><button type="button">Delete</a>
     </main>
-</div>
 {% endblock %}
