@@ -106,7 +106,7 @@
         }
       }
     })
-    if ($.cookie('Koujina-free-banner')!="true") {
+    if ($.cookie('corona-free-banner')!="true") {
       document.querySelector('#proBanner').classList.add('d-flex');
     }
     else {
@@ -117,7 +117,7 @@
       document.querySelector('#proBanner').classList.remove('d-flex');
       var date = new Date();
       date.setTime(date.getTime() + 24 * 60 * 60 * 1000); 
-      $.cookie('Koujina-free-banner', "true", { expires: date });
+      $.cookie('corona-free-banner', "true", { expires: date });
     });
   });
 })(jQuery);

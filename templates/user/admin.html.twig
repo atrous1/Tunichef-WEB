@@ -11,8 +11,8 @@
                     <h4 class="card-title">List of users</h4>
                     <br>
                     <div>
-                      <label for="search-input">Rechercher un utilisateur :</label>
-                      <input type="text" id="search" placeholder="Recherche par nom..." style="background-color: #2A3038; color: white; border: 1px; border-radius: 5px; padding: 5px; width: 300px;">
+                      <label for="search-input">Rechercher un utilisateur : </label>
+                      <input type="text" id="search" placeholder="Recherche par nom" style="background-color: #2A3038; color: white; border: 1px; border-radius: 5px; padding: 5px; width: 300px;">
                     </div>
                     <br>
                     <div class="input-group">
@@ -28,9 +28,13 @@
       <option value="{{ path('utilisateur_display_sorted_by_num_asc') }}">Numéro de téléphone croissant</option>
       <option value="{{ path('utilisateur_display_sorted_by_num_desc') }}">Numéro de téléphone décroissant</option>
     </select>
+    <br>
+    <br>
+    <a href="{{ path('app_user_stat') }}">Génerer statistiques</a>
+    <br>
   </div>
   <br>
-  
+  <br>
   </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -54,10 +58,12 @@
                       <table id="results" class="table">
                         <thead>
                           <tr>
+                            <th style="font-weight: bold;"> Statut </th>
                             <th style="font-weight: bold;"> Nom </th>
                             <th style="font-weight: bold;"> Prenom </th>
                             <th style="font-weight: bold;"> Email </th>
                             <th style="font-weight: bold;"> Num Tel </th>
+                            <th style="font-weight: bold;"> Role </th>
                             <th style="font-weight: bold;"> Image </th>
                             <th style="font-weight: bold;"> Actions </th>
                           </tr>
@@ -65,11 +71,12 @@
                         <tbody>
                             {% for user in users %}
                                 <tr>
+                                    <td>{{ user.statut }}</td>
                                     <td>{{ user.nom }}</td>
                                     <td>{{ user.prenom }}</td>
                                     <td>{{ user.email }}</td>
                                     <td>{{ user.numtel }}</td>
-
+                                    <td>{{ user.role }}</td>
 
                                     {% if user.image %}
                                     <td><img src="{{ asset('uploads/files/' ~ user.image) }}" style="width:100px;height:100px;"></td>
@@ -82,6 +89,23 @@
 
                                     <a href="{{ path('app_user_editB', {'id': user.id }) }}" >
                                         <button type="button" class="btn btn-outline-warning">Edit</button> </a>
+<br>
+<br>
+                                    {% if user.role == 'CLIENT' %}
+                                    <a href="{{ path('app_promote_to_admin', {'id': user.id }) }}">
+                                      <button type="button" class="btn btn-outline-success">Promote</button>
+                                    </a>
+                                    {% endif %}
+
+                                    {% if user.statut == 'ACTIVE' %}
+                                    <a href="{{ path('app_user_ban', {'id': user.id }) }}">
+                                      <button type="button" class="btn btn-outline-primary">Ban</button>
+                                    </a>
+                                    {% elseif user.statut == 'BANNED' %}
+                                    <a href="{{ path('app_user_active', {'id': user.id }) }}">
+                                      <button type="button" class="btn btn-outline-primary">Activate</button>
+                                    </a>
+                                    {% endif %}      
 
                                     </td>
                                     

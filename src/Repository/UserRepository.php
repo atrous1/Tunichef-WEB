@@ -31,6 +31,16 @@ class UserRepository extends ServiceEntityRepository
         ->getResult();
     }
 
+    public function getStatsByStatut()
+    {
+    $qb = $this->createQueryBuilder('u')
+        ->select('u.statut as status, COUNT(u) as count')
+        ->groupBy('u.statut');
+
+    return $qb->getQuery()->getResult();
+    }
+
+
 //    /**
 //     * @return User[] Returns an array of User objects
 //     */

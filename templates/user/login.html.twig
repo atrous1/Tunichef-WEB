@@ -8,7 +8,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
     {% block stylesheet %}
-        
+        <style>
+.invalid {
+  color: #842029; background-color: #f8d7da; border-color: #f5c2c7; position: relative;
+  padding: 1rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+}
+        </style>
 
         
          <link rel="stylesheet" href="{{ asset('assets/fonts/material-icon/css/material-design-iconic-font.min.css') }}">
@@ -38,7 +46,11 @@
                         <h2 class="form-title">Log in</h2>
                         <form method="POST" class="register-form" id="login-form">
                         {% if error %}
-                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                        <div class="invalid">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                        {% endif %}
+
+                        {% if banMessage %}
+                        <div class="invalid">{{ banMessage }}</div>
                         {% endif %}
 
                         {% if app.user %}
@@ -55,6 +67,7 @@
                                 <label for="inputPassword"><i class="zmdi zmdi-lock"></i></label>
                                 <input type="password" name="password" id="inputPassword" placeholder="Password" autocomplete="current-password" required>
                             </div>
+
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                             <div>
                                 <a style="margin-left : 3 0px" href="{{path('app_forgot_password_request')}}">Forgot Password?  </a> 
@@ -81,5 +94,6 @@
 {% endblock %}
 
 </body>
+
 </html>
 {% endblock %}

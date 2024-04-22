@@ -16,6 +16,9 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use App\Form\EditUserBackFormType;
+
 
 class UserController extends AbstractController
 {
@@ -58,6 +61,8 @@ class UserController extends AbstractController
             }
             
             $User->setPassword($passwordEncoder->encodePassword($User, $User->getPassword()));
+            $User->setRole("CLIENT");
+            $User->setStatut("ACTIF");
             $em->persist($User);
             $em->flush();
             return $this->redirectToRoute('app_login');
@@ -119,7 +124,7 @@ class UserController extends AbstractController
         
         $user=$repository->find($id);
         $originalFile = $user->getImage();
-        $form=$this->createForm(UserFormType::class,$user);
+        $form=$this->createForm(EditUserBackFormType::class,$user);
         $form->handleRequest($request);
         if ($form->isSubmitted()&& $form->isValid()){ 
             $em=$doctrine->getManager();
@@ -294,4 +299,70 @@ class UserController extends AbstractController
             'users' => $users,
         ]);
     }
+
+    #[Route('user/promote-to-admin/{id}', name: 'app_promote_to_admin')]
+public function promoteToAdmin($id): RedirectResponse
+{
+    // Récupérez l'utilisateur à partir de l'identifiant
+    $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+
+    // Mettez à jour le rôle de l'utilisateur en 'ADMIN'
+    $user->setRole('ADMIN');
+
+    // Enregistrez les modifications dans la base de données
+    $entityManager = $this->getDoctrine()->getManager();
+    $entityManager->flush();
+
+    // Redirigez vers une page de confirmation ou une autre page appropriée
+    return $this->redirectToRoute('app_user_back');
 }
+
+#[Route('user/ban/{id}', name: 'app_user_ban')]
+public function ban($id): RedirectResponse
+{
+    // Récupérez l'utilisateur à partir de l'identifiant
+    $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+
+    // Mettez à jour le rôle de l'utilisateur en 'ADMIN'
+    $user->setStatut('BANNED');
+
+    // Enregistrez les modifications dans la base de données
+    $entityManager = $this->getDoctrine()->getManager();
+    $entityManager->flush();
+
+    // Redirigez vers une page de confirmation ou une autre page appropriée
+    return $this->redirectToRoute('app_user_back');
+}
+
+#[Route('user/active/{id}', name: 'app_user_active')]
+public function active($id): RedirectResponse
+{
+    // Récupérez l'utilisateur à partir de l'identifiant
+    $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+
+    // Mettez à jour le rôle de l'utilisateur en 'ADMIN'
+    $user->setStatut('ACTIVE');
+
+    // Enregistrez les modifications dans la base de données
+    $entityManager = $this->getDoctrine()->getManager();
+    $entityManager->flush();
+
+    // Redirigez vers une page de confirmation ou une autre page appropriée
+    return $this->redirectToRoute('app_user_back');
+}
+
+    #[Route('/user/stats', name: 'app_user_stat')]
+    public function stats(UserRepository $userRepository)
+    {
+    $stats = $userRepository->getStatsByStatut();
+
+    return $this->render('user/stats.html.twig', [
+        'stats' => $stats,
+    ]);
+    }
+
+
+}
+
+
+
