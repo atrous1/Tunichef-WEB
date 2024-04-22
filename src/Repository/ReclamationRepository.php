@@ -72,9 +72,9 @@ public function SortByDescription()
         ->getResult()
         ;
 }
-    // /**
-    //  * @return Reclamation[] Returns an array of Reclamation objects
-    //  */
+    // 
+    // * @return Reclamation[] Returns an array of Reclamation objects
+    //  
     /*
     public function findByExampleField($value)
     {
@@ -100,7 +100,8 @@ public function SortByDescription()
         ;
     }
     */
-    public function sms(){
+    public function sms()
+    {
         // Your Account SID and Auth Token from twilio.com/console
                 $sid = 'AC5f30c61a472e288900d2e1fb14d3b5b3';
                 $auth_token = '348eab68dd79dd13eb813691337783d5';
@@ -117,9 +118,10 @@ public function SortByDescription()
                         // A Twilio phone number you purchased at twilio.com/console
                         'from' => '+17573472962',
                         // the body of the text message you'd like to send
-                        'body' => 'Une reclamation a été ajoutée avec succée !'
+                        'body' => 'Une reclamation a été ajoutée '
                     ]
                 );
+           
             }
 
 }

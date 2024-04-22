@@ -38,6 +38,8 @@ class ReclamationController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($reclamation);
             $entityManager->flush();
+            $reclamationRepository->sms();
+
             $this->addFlash('danger', 'Réclamation envoyée avec succès');
             return $this->redirectToRoute('app_reclamation_index');
         }
@@ -91,7 +93,7 @@ class ReclamationController extends AbstractController
 
         return $this->redirectToRoute('app_reclamation_index');
     }
-
+/*
     public function Sort(Request $request,ReclamationRepository $ReclamationRepository): Response
     {
     $Reclamations = $entityManager
@@ -144,4 +146,5 @@ class ReclamationController extends AbstractController
         ]);
     }
 }
+*/
 }
