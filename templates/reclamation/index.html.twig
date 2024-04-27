@@ -1,60 +1,47 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Reclamation {% endblock %}
+{% block title %}Réclamations{% endblock %}
 
 {% block content %}
-    <h1>Réclamations </h1>
-
+    <h1>Réclamations</h1>
+   
     <table class="table">
         <thead>
-            <form method="POST" class="form-inline">
-                <div class="form-group">
-                    <label for="optionsRadios">Sort by:</label>
-                    <div class="radio">
-                        <label><input type="radio" name="optionsRadios" value="Avis" checked>Avis</label>
-                    </div>
-                    <div class="radio">
-                        <label><input type="radio" name="optionsRadios" value="description">Description</label>
-                    </div>
-                </div>
-            </form>
             <tr>
-               
                 <th>Description</th>
                 <th>Avis</th>
                 <th>Date de la réclamation</th>
-                <th>Réponse(s)</th> 
+                <th>Statut</th>
+                <th>Réponse(s)</th>
                 <th>Actions</th>
             </tr>
+            <form action="{{ path('app_reclamation_index') }}" method="get">
+                <button type="submit" name="sort" value="avis" class="btn btn-primary">Trier par Avis</button>
+            </form>
+            
         </thead>
         <tbody>
-        {% for reclamation in reclamations %}
-            <tr>
-            
-                <td>{{ reclamation.description }}</td>
-                <td>{{ reclamation.avis }}</td>
-                <td>{{ reclamation.daterec ? reclamation.daterec|date('Y-m-d') : '' }}</td>
-                <td>
-                    {% for idRep in reclamation.idRep %}
-                        {{ idRep.id }}{% if not loop.last %}   /  {% endif %}
-                    {% endfor %}
-                </td>
-                <td>
-                    <a href="{{ path('app_reclamation_show', {'id': reclamation.id}) }}">Afficher</a>
-                    <a href="{{ path('app_reclamation_edit', {'id': reclamation.id}) }}">Modifier</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">No records found</td>
-            </tr>
-        {% endfor %}
+            {% for reclamation in reclamations %}
+                <tr>
+                    <td>{{ reclamation.description }}</td>
+                    <td>{{ reclamation.avis }}</td>
+                    <td>{{ reclamation.daterec ? reclamation.daterec|date('Y-m-d') : '' }}</td>
+                    <td>{{ reclamation.idRep|length > 0 ? 'traité' : 'non traité' }}</td>
+                    <td>
+                        {% for idRep in reclamation.idRep %}
+                            {{ idRep.id }}{% if not loop.last %} / {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <a href="{{ path('app_reclamation_show', {'id': reclamation.id}) }}">Afficher</a>
+                        <a href="{{ path('app_reclamation_edit', {'id': reclamation.id}) }}">Modifier</a>
+                    </td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 
     <a href="{{ path('app_reclamation_new') }}">Ajouter une nouvelle réclamation</a>
 
-
     {% include 'footer.html.twig' %}
 {% endblock %}
-

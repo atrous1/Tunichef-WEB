@@ -51,6 +51,10 @@ class Reclamation
      
      */
     private  $idRep;
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $statut;
 
     public function __construct()
     {
@@ -94,6 +98,17 @@ class Reclamation
     public function setDaterec(\DateTimeInterface $daterec): self
     {
         $this->daterec = $daterec;
+
+        return $this;
+    }
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(string $statut): self
+    {
+        $this->statut = $statut;
 
         return $this;
     }

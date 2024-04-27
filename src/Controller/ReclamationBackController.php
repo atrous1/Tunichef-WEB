@@ -9,11 +9,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
+
+
 /**
  * @Route("/reclamationBack")
  */
 
-class ReaclamationBackController extends AbstractController
+class ReclamationBackController extends AbstractController
 {
      /**
      * @Route("/", name="app_reclamation_indexack", methods={"GET","POST"})
@@ -25,20 +28,32 @@ class ReaclamationBackController extends AbstractController
         ]);
     }
 
+   
     /**
      * @Route("/new", name="app_reclamation_newack", methods={"GET", "POST"})
      */
-    public function new(Request $request, ReclamationRepository $reclamationRepository): Response
+    public function new(Request $request, ReclamationRepository $reclamationRepository, EntityManagerInterface $entityManager): Response
     {
         $reclamation = new Reclamation();
         $form = $this->createForm(ReclamationType::class, $reclamation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $reclamationRepository->add($reclamation);
-            return $this->redirectToRoute('app_reclamation_indexack', [], Response::HTTP_SEE_OTHER);
+           
+            // Votre logique de gestion de la réclamation
+             // Définition du statut en fonction de la présence d'une réponse
+             $statut = $reclamation->getReponse() ? 'traité' : 'non traité';
+             $reclamation->setStatut($statut);
+
+            // Enregistrez la réclamation dans la base de données
+            $entityManager->persist($reclamation);
+            $entityManager->flush();
+
+            // Redirigez ou effectuez d'autres actions nécessaires après l'enregistrement
+            return $this->redirectToRoute('app_reclamation_indexack');
         }
 
+        // Si le formulaire n'est pas valide, affichez-le à nouveau avec les erreurs
         return $this->render('backReclamation/new.html.twig', [
             'reclamation' => $reclamation,
             'form' => $form->createView(),
@@ -48,12 +63,16 @@ class ReaclamationBackController extends AbstractController
     /**
      * @Route("/{id}", name="app_reclamation_showack", methods={"GET"})
      */
-    public function show(Reclamation $reclamation): Response
-    {
-        return $this->render('backReclamation/show.html.twig', [
-            'reclamation' => $reclamation,
-        ]);
+    public function show(Reclamation $reclamation = null): Response
+{
+    if (!$reclamation) {
+        throw $this->createNotFoundException('Réclamation non trouvée');
     }
+
+    return $this->render('backReclamation/show.html.twig', [
+        'reclamation' => $reclamation,
+    ]);
+}
 
     /**
      * @Route("/{id}/edit", name="app_reclamation_editack", methods={"GET", "POST"})
@@ -64,6 +83,8 @@ class ReaclamationBackController extends AbstractController
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
+        $statut = $reclamation->getReponse() ? 'traité' : 'non traité';
+        $reclamation->setStatut($statut);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->flush(); // Enregistre les modifications dans la base de données
 
@@ -87,58 +108,5 @@ class ReaclamationBackController extends AbstractController
 
         return $this->redirectToRoute('app_reclamation_indexack', [], Response::HTTP_SEE_OTHER);
     }
-    /*
-    public function index1(EntityManagerInterface $entityManager,Request $request,ReclamationRepository $ReclamationRepository): Response
-    {
-        $Reclamations = $entityManager
-            ->getRepository(PReclamation::class)
-            ->findAll();
-
-            /////////
-            $back = null;
-            
-            if($request->isMethod("POST")){
-                if ( $request->request->get('optionsRadios')){
-                    $SortKey = $request->request->get('optionsRadios');
-                    switch ($SortKey){
-                        case 'Avis':
-                            $Reclamations = $ReclamationRepository->SortByAvis();
-                            break;
-    
-                     
-    
-                    }
-                }
-                else
-                {
-                    $type = $request->request->get('optionsearch');
-                    $value = $request->request->get('Search');
-                    switch ($type){
-                        
-    
-    
-                        case 'Avis':
-                            $Reclamations = $ReclamationRepository->findByAvis($value);
-                            break;
-                        
-                     
-    
-                    }
-                }
-
-                if ( $produits){
-                    $back = "success";
-                }else{
-                    $back = "failure";
-                }
-            }
-                ////////
-
-        return $this->render('Reclamation/show.html.twig', [
-            'Reclamations' => $Reclamations, 'back'=> $back
-        ]);
-    }
-    */
-
-}
+   }
 

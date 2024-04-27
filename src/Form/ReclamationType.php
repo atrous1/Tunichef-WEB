@@ -11,6 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use App\Entity\Reponse;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 
 
@@ -35,7 +36,9 @@ class ReclamationType extends AbstractType
                 'multiple' => true, // Permet la sélection de plusieurs réponses
                 'expanded' => false, // Utilise une liste déroulante au lieu de cases à cocher
                 'choice_label' => 'contenu',
-            ]);
+            ])
+           ;
+          
         
     }
 

@@ -1,4 +1,6 @@
-index:
-    path: /x
-    controller: App\Controller\ReclamationController::index
+
+ 
+
+
+
 

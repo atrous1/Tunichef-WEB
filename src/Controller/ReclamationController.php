@@ -9,21 +9,35 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+
 
 /**
  * @Route("/reclamation")
  */
 class ReclamationController extends AbstractController
 {
-    /**
-     * @Route("/", name="app_reclamation_index", methods={"GET"})
-     */
-    public function index(ReclamationRepository $reclamationRepository): Response
-    {
-        return $this->render('reclamation/index.html.twig', [
-            'reclamations' => $reclamationRepository->findAll(),
-        ]);
+  /**
+ * @Route("/", name="app_reclamation_index", methods={"GET"})
+ */
+public function index(Request $request, ReclamationRepository $reclamationRepository): Response
+{
+    $sort = $request->query->get('sort', 'date'); // Par défaut, tri par date
+
+    // Si le tri par avis est demandé
+    if ($sort === 'avis') {
+        $reclamations = $reclamationRepository->findBy([], ['avis' => 'DESC']);
+    } else {
+        $reclamations = $reclamationRepository->findAll(); // Tri par date si le paramètre de tri n'est pas avis
     }
+
+    return $this->render('reclamation/index.html.twig', [
+        'reclamations' => $reclamations,
+    ]);
+}
+
+
 
     /**
      * @Route("/new", name="app_reclamation_new", methods={"GET", "POST"})
@@ -93,58 +107,7 @@ class ReclamationController extends AbstractController
 
         return $this->redirectToRoute('app_reclamation_index');
     }
-/*
-    public function Sort(Request $request,ReclamationRepository $ReclamationRepository): Response
-    {
-    $Reclamations = $entityManager
-    ->getRepository(Reclamation::class)
-    ->findAll();
-
-    /////////
-    $back = null;
     
-    if($request->isMethod("POST")){
-        if ( $request->request->get('optionsRadios')){
-            $SortKey = $request->request->get('optionsRadios');
-            switch ($SortKey){
-                case 'Avis':
-                    $Reclamations = $ReclamationRepository->SortByAvis();
-                    break;
-                    case 'Description':
-                        $Reclamations = $ReclamationRepository->SortByDescription();
-                        break;
+   
 
-
-            }
-        }
-        else
-        {
-            $type = $request->request->get('optionsearch');
-            $value = $request->request->get('Search');
-            switch ($type){
-                
-
-
-                case 'Avis':
-                    $Reclamations = $ReclamationRepository->findByAvis($value);
-                    break;
-                    case 'Description':
-                        $Reclamations = $ReclamationRepository->findBydescription($value);
-                        break;
-             
-
-            }
-        }
-
-        if ( $Reclamations){
-            $back = "success";
-        }else{
-            $back = "failure";
-        }
-        return $this->render('Reclamation/show.html.twig', [
-            'Reclamations' => $Reclamations, 'back'=> $back
-        ]);
-    }
-}
-*/
 }

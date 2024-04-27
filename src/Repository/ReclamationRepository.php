@@ -64,14 +64,7 @@ public function SortByAvis(){
         ->getResult()
         ;
 }
-public function SortByDescription()
-{
-    return $this->createQueryBuilder('e')
-        ->orderBy('e.Description','ASC')
-        ->getQuery()
-        ->getResult()
-        ;
-}
+
     // 
     // * @return Reclamation[] Returns an array of Reclamation objects
     //  
@@ -100,6 +93,7 @@ public function SortByDescription()
         ;
     }
     */
+    
     public function sms()
     {
         // Your Account SID and Auth Token from twilio.com/console
@@ -121,7 +115,9 @@ public function SortByDescription()
                         'body' => 'Une reclamation a été ajoutée '
                     ]
                 );
+                
            
             }
 
-}
+
+        }
