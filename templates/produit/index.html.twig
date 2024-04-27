@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Produit index
+{% endblock %}
+
+{% block content %}
+
+	<h1>Produit index</h1>
+	<a href="{{ path('app_produit_export_excel') }}" class="btn btn-success">Export to Excel</a>
+	<br>
+	<a href="{{ path('app_produit_export_pdf') }}" class="btn btn-danger">Export to PDF</a>
+	<br>
+	<table class="table table-striped table-bordered">
+		<thead class="thead-dark">
+			<tr>
+				<th>IdProduit</th>
+				<th>NomProduit</th>
+				<th>DescriptionProduit</th>
+				<th>ImageProduit</th>
+				<th>PrixProduit</th>
+				<th>LikeProduit</th>
+				<th>DislikeProduit</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for produit in produits %}
+				<tr>
+					<td>{{ produit.idProduit }}</td>
+					<td>{{ produit.nomProduit }}</td>
+					<td>{{ produit.descriptionProduit }}</td>
+					<td><img src="{{ asset('uploads/' ~ produit.imageProduit) }}" width="50" height="50"></td>
+					<td>{{ produit.prixProduit }}</td>
+					<td>{{ produit.likeProduit }}</td>
+					<td>{{ produit.dislikeProduit }}</td>
+					<td>
+						<a href="{{ path('app_produit_show', {'idProduit': produit.idProduit}) }}" class="btn btn-info">Show</a>
+						<a href="{{ path('app_produit_edit', {'idProduit': produit.idProduit}) }}" class="btn btn-warning">Edit</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="8">No records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<a href="{{ path('app_produit_new') }}" class="btn btn-success">Create new</a>
+{% endblock %}

@@ -1,3 +1,50 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+app_user:
+  path: /user
+  controller: App\Controller\UserController::index
+
+app_home:
+  path: /home
+  controller: App\Controller\UserController::home
+
+app_user_front:
+  path: /user/front
+  controller: App\Controller\UserController::front
+
+app_user_back:
+  path: /user/back
+  controller: App\Controller\UserController::back
+
+app_user_delete:
+  path: /user/delete/{id}
+  controller: App\Controller\UserController::delete
+
+app_user_add:
+  path: /user/add
+  controller: App\Controller\UserController::Add
+
+app_user_edit:
+  path: /user/edit/{id}
+  controller: App\Controller\UserController::edit
+
+app_user_editB:
+  path: /user/editB/{id}
+  controller: App\Controller\UserController::editBack
+
+app_user_deleteF:
+  path: /user/delete/{id}
+  controller: App\Controller\UserController::deleteFront
+
+app_user_deleteB:
+  path: /user/deleteB/{id}
+  controller: App\Controller\UserController::deleteBack
+
+app_login:
+    path: /login
+    controller: App\Controller\SecurityController::login
+
+app_logout:
+    path: /logout
+    controller: App\Controller\CustomSecurityController::logout

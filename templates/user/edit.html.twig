@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block content %}
+<main id="main" class="main">
+    <h1>Edit User</h1>
+    
+    <table class="table">
+    {{ form_start(form,{attr:{novalidate:'novalidate'}}) }}
+        <tbody>
+            <tr>
+                <th>Nom</th>
+                <td>{{ form_widget(form.nom) }}</td>
+            </tr>
+            <tr>
+                <th>Prenom</th>
+                <td>{{ form_widget(form.prenom) }}
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ form_widget(form.email) }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ form_widget(form.password) }}</td>
+            </tr>
+            <tr>
+                <th>Num Tel</th>
+                <td>{{ form_widget(form.numtel) }}
+            </tr>
+            <tr>
+                <th>Image</th>
+                <td>{{ form_widget(form.image) }}
+            </tr>
+            
+        </tbody>
+
+    </table>
+    
+
+    {{ form_end(form) }}
+
+    
+
+    <a href="{{ path('app_user_deleteF', {'id': user.id}) }}"><button type="button">Delete</a>
+    </main>
+{% endblock %}
