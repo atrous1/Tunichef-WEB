@@ -110,7 +110,7 @@ class UserController extends AbstractController
             $em->flush();
             return $this->redirectToRoute("app_user_front");
         }
-        return $this->renderForm('user/edit.html.twig', 
+        return $this->renderForm('user/editFront.html.twig', 
         [
             'user' => $user,
             'form' => $form,
@@ -200,14 +200,17 @@ class UserController extends AbstractController
     }
 
     #[Route('/home', name: 'app_home', methods: ["GET", "POST"])]
-    public function home(): Response
-    {
-        $user = $this->getUser();
+    public function home(Request $request): Response
+{
+    $user = $this->getUser();
+    $warningMessage = $request->query->get('warningMessage');
 
-        return $this->render('user/home.html.twig', [
-            'user' => $user,
-        ]);
-    }
+    return $this->render('user/home.html.twig', [
+        'user' => $user,
+        'warningMessage' => $warningMessage,
+    ]);
+}
+
 
     #[Route('/profil/{id}', name: 'app_profil')]
     public function profil($id, UserRepository $UserRepository): Response
@@ -308,6 +311,23 @@ public function promoteToAdmin($id): RedirectResponse
 
     // Mettez à jour le rôle de l'utilisateur en 'ADMIN'
     $user->setRole('ADMIN');
+
+    // Enregistrez les modifications dans la base de données
+    $entityManager = $this->getDoctrine()->getManager();
+    $entityManager->flush();
+
+    // Redirigez vers une page de confirmation ou une autre page appropriée
+    return $this->redirectToRoute('app_user_back');
+}
+
+#[Route('user/demote-to-client/{id}', name: 'app_demote_to_client')]
+public function demoteToClient($id): RedirectResponse
+{
+    // Récupérez l'utilisateur à partir de l'identifiant
+    $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+
+    // Mettez à jour le rôle de l'utilisateur en 'ADMIN'
+    $user->setRole('CLIENT');
 
     // Enregistrez les modifications dans la base de données
     $entityManager = $this->getDoctrine()->getManager();

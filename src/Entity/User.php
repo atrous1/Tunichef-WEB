@@ -131,12 +131,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->numtel;
     }
 
-    public function setNumtel(int $numtel): static
+    public function setNumtel(?int $numtel): void
     {
         $this->numtel = $numtel;
-
-        return $this;
     }
+
 
     public function getImage(): ?string
     {

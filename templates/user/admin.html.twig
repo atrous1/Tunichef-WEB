@@ -97,6 +97,12 @@
                                     </a>
                                     {% endif %}
 
+                                    {% if user.role == 'ADMIN' %}
+                                    <a href="{{ path('app_demote_to_client', {'id': user.id }) }}">
+                                      <button type="button" class="btn btn-outline-success">Demote</button>
+                                    </a>
+                                    {% endif %}
+
                                     {% if user.statut == 'ACTIVE' %}
                                     <a href="{{ path('app_user_ban', {'id': user.id }) }}">
                                       <button type="button" class="btn btn-outline-primary">Ban</button>

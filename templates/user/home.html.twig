@@ -1,1 +1,53 @@
 {% extends 'base.html.twig' %}
+
+{% block content %}
+<style>
+.banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    height: 100px; /* Hauteur fixe du bannière */
+}
+
+.banner-content {
+    color: white; 
+background-color: rgba(255, 200, 100, 0.9);
+
+  border-color: #f5c2c7; 
+  position: relative;
+  padding: 1rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+}
+
+.banner-close {
+    position: absolute;
+    top: 2px;
+    right: 20px; /* Augmentez la distance de la droite */
+    cursor: pointer;
+    color: white;
+    padding: 1rem 1rem;
+  margin-bottom: 1rem;
+    font-size: 1.5rem; /* Augmentez la taille de la police */
+    line-height: 1; /* Pour centrer verticalement le texte */
+}
+</style>
+{% if warningMessage is not empty %}
+    <div class="banner">
+        <div class="banner-content alert alert-warning" role="alert">
+            {{ warningMessage }}
+            <span class="banner-close" onclick="closeBanner()">X</span>
+            <a href="{{ path('app_user_edit', {'id': app.user.id}) }}" style="color: white; text-decoration: underline;">Veuillez compléter votre profil.</a>
+        </div>
+    </div>
+{% endif %}
+
+<script>
+function closeBanner() {
+    document.querySelector('.banner').style.display = 'none';
+}
+</script>
+{% endblock %}

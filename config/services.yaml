@@ -7,8 +7,16 @@ parameters:
     categorie_images_directory: '%kernel.project_dir%/public/uploads/images/categorie'
     files_directory : '%kernel.project_dir%/public/uploads/files'
     locale: 'fr' # ou une autre locale disponible sur votre application
+    google_api_client_id: YOUR_CLIENT_ID
+    google_api_client_secret: YOUR_CLIENT_SECRET
 
 services:
+
+    google_client:
+        class: Google_Client
+        arguments:
+            - { clientId: '%google_api_client_id%', clientSecret: '%google_api_client_secret%' }
+
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.

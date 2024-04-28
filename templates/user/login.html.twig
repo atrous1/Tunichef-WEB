@@ -10,7 +10,10 @@
     {% block stylesheet %}
         <style>
 .invalid {
-  color: #842029; background-color: #f8d7da; border-color: #f5c2c7; position: relative;
+  color: #842029; 
+  background-color: #f8d7da; 
+  border-color: #f5c2c7; 
+  position: relative;
   padding: 1rem 1rem;
   margin-bottom: 1rem;
   border: 1px solid transparent;
@@ -80,9 +83,8 @@
                         <div class="social-login">
                             <span class="social-label">Or login with</span>
                             <ul class="socials">
-                                <li><a href="#"><i class="display-flex-center zmdi zmdi-facebook"></i></a></li>
-                                <li><a href="#"><i class="display-flex-center zmdi zmdi-twitter"></i></a></li>
-                                <li><a href="#"><i class="display-flex-center zmdi zmdi-google"></i></a></li>
+                                <li><a href="{{ path('connect_google') }}"><i class="display-flex-center zmdi zmdi-google"></i></a></li>
+                                <li><a href="{{ path('connect_facebook_start') }}"><i class="display-flex-center zmdi zmdi-facebook"></i></a></li>
                             </ul>
                         </div>
                     </div>

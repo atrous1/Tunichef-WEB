@@ -109,6 +109,10 @@ app_promote_to_admin:
   path: user/promote-to-admin/{id}
   controller: App\Controller\UserController::promoteToAdmin
 
+app_demote_to_client:
+  path: user/demote-to-client/{id}
+  controller: App\Controller\UserController::demoteToClient
+
 app_user_ban:
   path: user/ban/{id}
   controller: App\Controller\UserController::ban
@@ -120,3 +124,19 @@ app_user_active:
 app_user_stat:
     path: /user/stats
     controller: App\Controller\UserController::stats
+
+connect_google:
+  path: /connect/google
+  controller: App\Controller\GoogleController::connectAction
+
+connect_google_check:
+  path: /connect/google/check
+  controller: App\Controller\GoogleController::connectCheckAction
+
+connect_facebook_start:
+  path: /connect/facebook
+  controller: App\Controller\FacebookController::connectAction
+
+connect_facebook_check:
+  path: /connect/facebook/check
+  controller: App\Controller\FacebookController::connectCheckAction
