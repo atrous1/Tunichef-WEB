@@ -61,13 +61,12 @@ class ReclamationRepository extends ServiceEntityRepository
 public function countByStatut($statut)
 {
     return $this->createQueryBuilder('e')
-        ->select('COUNT(e)')
+        ->select('COUNT(e.id)')
         ->andWhere('e.statut = :statut')
         ->setParameter('statut', $statut)
         ->getQuery()
         ->getSingleScalarResult();
 }
-
 
 public function SortByAvis(){
     return $this->createQueryBuilder('e')
@@ -76,6 +75,36 @@ public function SortByAvis(){
         ->getResult()
         ;
 }
+public function updateReclamationStatut(): void
+{
+    $reclamations = $this->createQueryBuilder('r')
+        ->leftJoin('r.idRep', 'Reponse')
+        ->getQuery()
+        ->getResult();
+
+    foreach ($reclamations as $reclamation) {
+        if ($reclamation->getIdRep()->isEmpty()) {
+            $reclamation->setStatut('En attente');
+        } else {
+            $reclamation->setStatut('Traitée');
+        }
+        $this->_em->persist($reclamation);
+    }
+
+    $this->_em->flush();
+}
+public function updateStats(): void
+{
+    $nbReclamationsTraitees = $this->countByStatut('Traitée');
+    $nbReclamationsEnAttente = $this->countByStatut('En attente');
+
+    // Enregistre les statistiques mises à jour dans la base de données ou utilise-les directement
+    // Par exemple, tu pourrais les stocker dans une entité Statistique
+
+    // Assure-toi de bien enregistrer les modifications si tu les stockes dans une entité
+    $this->_em->flush();
+}
+
 
    
     

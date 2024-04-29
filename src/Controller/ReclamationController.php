@@ -56,17 +56,19 @@ public function index(Request $request, ReclamationRepository $reclamationReposi
         $reclamation = new Reclamation();
         $form = $this->createForm(ReclamationType::class, $reclamation);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($reclamation);
             $entityManager->flush();
-            $reclamationRepository->sms();
-
+    
+            $reclamationRepository->updateReclamationStatut(); // Mise à jour du statut des réclamations
+            $reclamationRepository->updateStats(); // Mise à jour des statistiques après ajout
+    
             $this->addFlash('danger', 'Réclamation envoyée avec succès');
             return $this->redirectToRoute('app_reclamation_index');
         }
-
+    
         return $this->render('reclamation/new.html.twig', [
             'reclamation' => $reclamation,
             'form' => $form->createView(),
@@ -124,9 +126,9 @@ public function index(Request $request, ReclamationRepository $reclamationReposi
 public function stats(ReclamationRepository $reclamationRepository): Response
 {
     // Récupérer le nombre de réclamations traitées
-    $nbReclamationsTraitees = $reclamationRepository->countByStatut('traitée');
+    $nbReclamationsTraitees = $reclamationRepository->countByStatut('Traitée');
 
-    // Récupérer le nombre de réclamations non traitées
+    // Récupérer le nombre de réclamations en attente
     $nbReclamationsEnAttente = $reclamationRepository->countByStatut('En attente');
 
     // Créer le diagramme à barres
@@ -142,11 +144,12 @@ public function stats(ReclamationRepository $reclamationRepository): Response
 
     // Passer le diagramme au template pour affichage
     return $this->render('reclamation/stat.html.twig', [
-        'chart' => $chart,
+        'piechart' => $chart, // Utilise piechart au lieu de chart si tu utilises un diagramme à secteurs
         'nbReclamationsTraitees' => $nbReclamationsTraitees,
         'nbReclamationsEnAttente' => $nbReclamationsEnAttente,
     ]);
 }
+
 
 /**
  * @Route("/download-pdf-all", name="app_reclamation_downloadPdfAll", methods={"GET"})

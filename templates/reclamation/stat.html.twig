@@ -1,19 +1,33 @@
-{% extends 'base.html.twig' %}
- 
- 
+
 {% block body %}
- 
+
     <div class="robust-content content container-fluid">
         <div class="content-wrapper">
-            <div id="div_chart"></div>
- 
+            <h1 class="stat-title">Statistiques des Réclamations</h1>
+            <div id="chart_div" style="width: 100%; height: 500px;"></div>
+
             <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
             <script type="text/javascript">
-                {{ gc_draw(piechart, 'div_chart') }}
+                google.charts.load('current', {'packages':['corechart']});
+                google.charts.setOnLoadCallback(drawChart);
+
+                function drawChart() {
+                    var data = google.visualization.arrayToDataTable([
+                        ['Statut', 'Nombre'],
+                        ['Traitée', {{ nbReclamationsTraitees }}],
+                        ['En attente', {{ nbReclamationsEnAttente }}]
+                    ]);
+
+                    var options = {
+                        title: 'Statistiques des Réclamations',
+                        pieHole: 0.4 // Taille du trou central (0 à 1, 0 pour un cercle plein)
+                    };
+
+                    var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+                    chart.draw(data, options);
+                }
             </script>
- 
         </div>
     </div>
- 
- 
+
 {% endblock %}
