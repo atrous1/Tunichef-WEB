@@ -42,12 +42,11 @@
         <button type="submit" name="sort" value="avis" class="btn btn-primary">Trier les réclamations par avis</button>
     </form>
 
-    <a href="{{ path('app_reclamation_new') }}">Ajouter une nouvelle réclamation</a>
-    <a href="{{ path('app_reclamation_stats') }}">stat</a>
-    
-    
-    <a href="{{ path('app_reclamation_downloadPdfAll') }}">Télécharger le PDF de toutes les réclamations</a>
-
+    <a href="{{ path('app_reclamation_new') }}" class="btn btn-primary">Ajouter une nouvelle réclamation</a>
+    <br>
+    <a href="{{ path('app_reclamation_stats') }}" class="btn btn-primary"> Statistique des réclamations</a> 
+    <br>
+    <a href="{{ path('app_reclamation_downloadPdfAll') }}" class="btn btn-primary">Télécharger les réclamations</a>
 
     {% include 'footer.html.twig' %}
 {% endblock %}

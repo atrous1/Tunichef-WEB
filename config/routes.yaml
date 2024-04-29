@@ -8,3 +8,5 @@ app_reclamation_downloadPdfAll:
     path: '/download-pdf-all'
     controller: 'App\Controller\ReclamationController::downloadPdfAll'
     methods: ['GET']
+
+    

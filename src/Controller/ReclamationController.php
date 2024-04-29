@@ -148,8 +148,6 @@ public function stats(ReclamationRepository $reclamationRepository): Response
     ]);
 }
 
-
-
 /**
  * @Route("/download-pdf-all", name="app_reclamation_downloadPdfAll", methods={"GET"})
  */
@@ -175,14 +173,12 @@ public function downloadPdfAll(ReclamationRepository $reclamationRepository, Pdf
     */
     return $this->render('pdf/index.html.twig', [
         'reclamations' => $reclamations,
-        $pdfContent,
         
-        Response::HTTP_OK,
-        [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="reclamations.pdf"',
-        ]
     ]);
 
 }
+
+
+
+
 }
