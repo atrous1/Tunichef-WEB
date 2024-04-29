@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Reclamation;
+
+use App\Entity\PdfGeneratorService;
 use App\Form\ReclamationType;
 use App\Repository\ReclamationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -10,6 +12,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use CMEN\GoogleChartsBundle\GoogleCharts\Charts\PieChart;
+use CMEN\GoogleChartsBundle\GoogleCharts\Charts\BarChart;
+use App\Response\PdfResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 
 
@@ -107,7 +116,73 @@ public function index(Request $request, ReclamationRepository $reclamationReposi
 
         return $this->redirectToRoute('app_reclamation_index');
     }
+     
     
-   
+ /**
+ * @Route("/stats", name="app_reclamation_stats", methods={"GET"})
+ */
+public function stats(ReclamationRepository $reclamationRepository): Response
+{
+    // Récupérer le nombre de réclamations traitées
+    $nbReclamationsTraitees = $reclamationRepository->countByStatut('traitée');
 
+    // Récupérer le nombre de réclamations non traitées
+    $nbReclamationsEnAttente = $reclamationRepository->countByStatut('En attente');
+
+    // Créer le diagramme à barres
+    $chart = new BarChart();
+    $chart->getData()->setArrayToDataTable([
+        ['Statut', 'Nombre'],
+        ['Traitée', $nbReclamationsTraitees],
+        ['En attente', $nbReclamationsEnAttente],
+    ]);
+    $chart->getOptions()->setTitle('Statistiques des Réclamations');
+    $chart->getOptions()->getHAxis()->setTitle('Statut');
+    $chart->getOptions()->getVAxis()->setTitle('Nombre');
+
+    // Passer le diagramme au template pour affichage
+    return $this->render('reclamation/stat.html.twig', [
+        'chart' => $chart,
+        'nbReclamationsTraitees' => $nbReclamationsTraitees,
+        'nbReclamationsEnAttente' => $nbReclamationsEnAttente,
+    ]);
+}
+
+
+
+/**
+ * @Route("/download-pdf-all", name="app_reclamation_downloadPdfAll", methods={"GET"})
+ */
+public function downloadPdfAll(ReclamationRepository $reclamationRepository, PdfGeneratorService $pdfGeneratorService): Response
+{
+    // Récupérer toutes les réclamations depuis le repository
+    $reclamations = $reclamationRepository->findAll();
+
+    // Générer le contenu PDF avec toutes les réclamations
+    $pdfContent = $pdfGeneratorService->generatePdf($reclamations);
+
+    // Retourner le PDF en tant que réponse
+   /* return new Response(
+        $pdfContent,
+        
+        Response::HTTP_OK,
+        [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="reclamations.pdf"',
+        ]
+        
+    );
+    */
+    return $this->render('pdf/index.html.twig', [
+        'reclamations' => $reclamations,
+        $pdfContent,
+        
+        Response::HTTP_OK,
+        [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="reclamations.pdf"',
+        ]
+    ]);
+
+}
 }

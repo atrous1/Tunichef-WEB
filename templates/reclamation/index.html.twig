@@ -15,10 +15,6 @@
                 <th>Réponse(s)</th>
                 <th>Actions</th>
             </tr>
-            <form action="{{ path('app_reclamation_index') }}" method="get">
-                <button type="submit" name="sort" value="avis" class="btn btn-primary">Trier par Avis</button>
-            </form>
-            
         </thead>
         <tbody>
             {% for reclamation in reclamations %}
@@ -26,7 +22,7 @@
                     <td>{{ reclamation.description }}</td>
                     <td>{{ reclamation.avis }}</td>
                     <td>{{ reclamation.daterec ? reclamation.daterec|date('Y-m-d') : '' }}</td>
-                    <td>{{ reclamation.idRep|length > 0 ? 'traité' : 'non traité' }}</td>
+                    <td>{{ reclamation.idRep|length > 0 ? 'traitée' : 'En attente' }}</td>
                     <td>
                         {% for idRep in reclamation.idRep %}
                             {{ idRep.id }}{% if not loop.last %} / {% endif %}
@@ -35,13 +31,23 @@
                     <td>
                         <a href="{{ path('app_reclamation_show', {'id': reclamation.id}) }}">Afficher</a>
                         <a href="{{ path('app_reclamation_edit', {'id': reclamation.id}) }}">Modifier</a>
+                        
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 
+    <form action="{{ path('app_reclamation_index') }}" method="get">
+        <button type="submit" name="sort" value="avis" class="btn btn-primary">Trier les réclamations par avis</button>
+    </form>
+
     <a href="{{ path('app_reclamation_new') }}">Ajouter une nouvelle réclamation</a>
+    <a href="{{ path('app_reclamation_stats') }}">stat</a>
+    
+    
+    <a href="{{ path('app_reclamation_downloadPdfAll') }}">Télécharger le PDF de toutes les réclamations</a>
+
 
     {% include 'footer.html.twig' %}
 {% endblock %}

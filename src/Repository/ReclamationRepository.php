@@ -57,6 +57,18 @@ class ReclamationRepository extends ServiceEntityRepository
         ->execute();
 }
 
+
+public function countByStatut($statut)
+{
+    return $this->createQueryBuilder('e')
+        ->select('COUNT(e)')
+        ->andWhere('e.statut = :statut')
+        ->setParameter('statut', $statut)
+        ->getQuery()
+        ->getSingleScalarResult();
+}
+
+
 public function SortByAvis(){
     return $this->createQueryBuilder('e')
         ->orderBy('e.Avis','ASC')
@@ -65,34 +77,7 @@ public function SortByAvis(){
         ;
 }
 
-    // 
-    // * @return Reclamation[] Returns an array of Reclamation objects
-    //  
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Reclamation
-    {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+   
     
     public function sms()
     {

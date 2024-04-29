@@ -5,6 +5,8 @@
         "php": ">=7.1.3",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "barryvdh/laravel-dompdf": "^2.1",
+        "cmen/google-charts-bundle": "^5.0",
         "doctrine/annotations": "^1.0",
         "doctrine/dbal": "^3",
         "doctrine/doctrine-bundle": "^2.7",
@@ -33,6 +35,7 @@
         "symfony/validator": "4.4.*",
         "symfony/web-link": "4.4.*",
         "symfony/yaml": "4.4.*",
+        "tecnickcom/tcpdf": "^6.7",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0",
         "twilio/sdk": "^8.0"
