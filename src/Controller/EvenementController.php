@@ -33,13 +33,22 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Constraints\Json;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\MailerInterface;
 
+use Symfony\Component\Filesystem\Filesystem;
+
+use CMEN\GoogleChartsBundle\GoogleCharts\Charts\PieChart; // Import the PieChart class
 
 class EvenementController extends AbstractController
 {
     #[Route('/dash/admin/events', name: 'dash_events')]
     public function eventsList(EvenementRepository $evenementRepository): Response
     {
+       
         $events = $evenementRepository->findAll();
 
         return $this->render('evenement/dash-admin-events.html.twig', [
@@ -63,10 +72,26 @@ class EvenementController extends AbstractController
     public function userEventDetail(ManagerRegistry $doctrine, $id): Response
     {
         $event = $doctrine->getRepository(Evenement::class)->find($id);
-
+        $numberOfPromotions = count($event->getPromotions());
+        $pieChart = new PieChart();
+        $pieChart->getData()->setArrayToDataTable(
+            [['Task', 'Hours per Day'],
+             ['promotion number',     $numberOfPromotions],
+             ['total promotion number',    30  ],
+            ]
+        );
+        $pieChart->getOptions()->setTitle('Promotion Statistic');
+        $pieChart->getOptions()->setHeight(500);
+        $pieChart->getOptions()->setWidth(900);
+        $pieChart->getOptions()->getTitleTextStyle()->setBold(true);
+        $pieChart->getOptions()->getTitleTextStyle()->setColor('#009900');
+        $pieChart->getOptions()->getTitleTextStyle()->setItalic(true);
+        $pieChart->getOptions()->getTitleTextStyle()->setFontName('Arial');
+        $pieChart->getOptions()->getTitleTextStyle()->setFontSize(20);
         return $this->render('evenement/user-event-details.html.twig', [
             'controller_name' => 'EvenementController',
             'event' => $event,
+            'piechart' => $pieChart
         ]);
     }
 
@@ -110,6 +135,7 @@ class EvenementController extends AbstractController
 
             $em->persist($event);//ajoute a base
             $em->flush();//update
+        return new Response('Email sent successfully');
             return $this->redirectToRoute("dash_events");
         }
 
@@ -123,13 +149,15 @@ class EvenementController extends AbstractController
     public function deleteEvent(ManagerRegistry $repo, $id): Response
     {
 
+        // Delete event from the database
         $event = $repo->getRepository(Evenement::class)->find($id);
         $em = $repo->getManager();
         $em->remove($event);
         $em->flush();
-
+    
         return $this->redirectToRoute('dash_events');
     }
+    
 
 
     #[Route('/dash/admin/event/update/{id}', name: 'update_event')]
@@ -257,13 +285,12 @@ class EvenementController extends AbstractController
     public function facebook_share(ManagerRegistry $doctrine, Request $request,$id): Response
     {
         $event = $doctrine->getRepository(Evenement::class)->find($id);
-        
 
         $fb = new Facebook([
             'app_id' => '2261837737339189',
             'app_secret' => 'f14df88c3889e59a98a697d328b00fe2',
             'default_graph_version' => 'v16.0',
-            'default_access_token' => 'EAAgJISLfqTUBO7U51KcdTxtWgZCwPcPjz3EaSAfZCJH2D3b4Kr96iD9ornivl0262kWxZC6NySh7pmHTxbuWBdsZBlFTZASy66XMT5CxLsTzmOe8Tt8Xk20z0oubGULYIeq412db8o4ByQbPbEB9qW7xUKcGyvmExRO9kQmWsC7uyeCEZCZADdu3laZBveVMYbi2lTbCWRYETPNBNnzs1IDc4gcZD',
+            'default_access_token' => 'EAAgJISLfqTUBOZBfpFSt7sbSbS4rWN15AKg2R1KfVGawaEozlvDL4ELPPVZCmdNhrwfLm94cTVdGkZCCTRE8kGJzHNsk7rsbLe64hkrvjDZCSMqbr0QiUeu7YyJLOma0c5YAVWrvnDa5vbv79JcUYfZAeUbNafjJedq2yZBrFRbVRECRFwBbjaS6DcKbNKUolI0SLIPSSXrhZCByDub2oCgc1oZD',
         ]);
         
      
@@ -273,18 +300,54 @@ class EvenementController extends AbstractController
                     .'**Discount on many products !! ' . '                                                                                                                                         ' 
                     .'**Date: '. $event->getEventDate()->format('d-m-Y');
         $data = [
-            'message' => $message 
+            'message' => $message
         ];
-        
+             $transport = Transport::fromDsn('smtp://aziznasri817@gmail.com:iupsxkanfbvaqlhh@smtp.gmail.com:587');
+
+            $mailer = new Mailer($transport);
+    
+            $email = (new Email());
+    
+            $email->from('aziznasri817@gmail.com');
+    
+            $email->to(
+            'ghannemhazem@gmail.com'
+            );
+            $email->subject($event->getEventName());
+            $email->text($event->getDescription());
+            $filesystem = new Filesystem();
+            // Define the directory where the image is located
+            $directory = $this->getParameter('kernel.project_dir') . '/public/uploads/files/';
+
+            // Define the name of the image file
+            $filename = $event->getImage();
+            if ($filesystem->exists($directory . $filename)) {
+                // Generate the URL to the image
+                $imageUrl = $this->getParameter('kernel.project_dir') . '/public/uploads/files/' . $filename;
+                $email->embed(fopen($imageUrl, 'r'), 'Image_Name_1.jpg');
+
+                // Now you can use $imageUrl in your template to display the image
+            }
+            try {
+                $mailer->send($email);
+
+                // Display custom successful message
+            } catch (TransportExceptionInterface $e) {
+                // Display custom error message
+
+            }
         try {
-            // Tenter de faire le post sur Facebook
+            // Tenter de faire le post sur Facebook 
             $response = $fb->post('/me/feed', $data);
+           
     
             // Vérifier si une erreur est survenue
             if ($response->isError()) {
                 // Gérer l'erreur si nécessaire
             } else {
                 // Post partagé avec succès
+               
+          
             }
         } catch (\Exception $e) {
             // 
@@ -318,4 +381,5 @@ class EvenementController extends AbstractController
         // Afficher la réponse JSON
         return new Response ($jsonResponse);
     }
+
 }
