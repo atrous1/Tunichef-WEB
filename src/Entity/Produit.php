@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Menu;
+
 
 /**
  * Produit
@@ -19,49 +21,49 @@ class Produit
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idProduit;
+    public $idProduit;
 
     /**
      * @var string
      *
      * @ORM\Column(name="nom_produit", type="string", length=255, nullable=false)
      */
-    private $nomProduit;
+    public $nomProduit;
 
     /**
      * @var string
      *
      * @ORM\Column(name="description_produit", type="string", length=255, nullable=false)
      */
-    private $descriptionProduit;
+    public $descriptionProduit;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="image_produit", type="string", length=255, nullable=true)
      */
-    private $imageProduit;
+    public $imageProduit;
 
     /**
      * @var float
      *
      * @ORM\Column(name="prix_produit", type="float", precision=10, scale=0, nullable=false)
      */
-    private $prixProduit;
+    public $prixProduit;
 
     /**
      * @var int
      *
      * @ORM\Column(name="like_produit", type="integer", nullable=false)
      */
-    private $likeProduit = '0';
+    public $likeProduit = '0';
 
     /**
      * @var int
      *
      * @ORM\Column(name="dislike_produit", type="integer", nullable=false)
      */
-    private $dislikeProduit = '0';
+    public $dislikeProduit = '0';
 
     /**
      * @var \Menu
@@ -71,7 +73,13 @@ class Produit
      *   @ORM\JoinColumn(name="fk_menu", referencedColumnName="id_menu")
      * })
      */
-    private $fkMenu;
+    public $fkMenu;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $qrCode;
+
 
 //complete the getters and setters for the produit
     public function getIdProduit(): ?int
@@ -159,6 +167,18 @@ class Produit
     public function setFkMenu(?Menu $fkMenu): self
     {
         $this->fkMenu = $fkMenu;
+
+        return $this;
+    }
+
+    public function getQrCode(): ?string
+    {
+        return $this->qrCode;
+    }
+
+    public function setQrCode(?string $qrCode): self
+    {
+        $this->qrCode = $qrCode;
 
         return $this;
     }

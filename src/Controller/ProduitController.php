@@ -22,12 +22,16 @@ class ProduitController extends AbstractController
     #[Route('/', name: 'app_produit_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
+        $totalProducts = $entityManager->getRepository(Produit::class)->count([]);
+
         $produits = $entityManager
             ->getRepository(Produit::class)
             ->findAll();
 
         return $this->render('produit/index.html.twig', [
             'produits' => $produits,
+            'totalProducts' => $totalProducts,
+
         ]);
     }
 

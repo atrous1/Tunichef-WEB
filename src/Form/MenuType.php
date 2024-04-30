@@ -6,6 +6,8 @@ use App\Entity\Menu;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
 
 class MenuType extends AbstractType
 {
@@ -16,9 +18,15 @@ class MenuType extends AbstractType
                 'attr' => ['class' => 'form-control'],
                 'label' => 'Number of Pages',
             ])
-            ->add('categorie', null, [
+            ->add('categorie', ChoiceType::class, [
                 'attr' => ['class' => 'form-control'],
                 'label' => 'Category',
+                'choices' => [
+                    'Kids' => 'Kids',
+                    'Tunisian' => 'Tunisian',
+                    'European' => 'European',
+                    'Oriental' => 'Oriental',
+                ],
             ])
             ->add('origine', null, [
                 'attr' => ['class' => 'form-control'],

@@ -2,7 +2,11 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Entity\Produit;
+
 
 /**
  * Menu
@@ -19,28 +23,31 @@ class Menu
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idMenu;
+    public $idMenu;
 
     /**
      * @var int
      *
      * @ORM\Column(name="nbr_page", type="integer", nullable=false)
      */
-    private $nbrPage;
+    public $nbrPage;
 
     /**
      * @var string
      *
      * @ORM\Column(name="categorie", type="string", length=255, nullable=false)
      */
-    private $categorie;
-
+    public $categorie;
+     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Produit", mappedBy="fkMenu")
+     */
+    public $produits;
     /**
      * @var string
      *
      * @ORM\Column(name="origine", type="string", length=255, nullable=false)
      */
-    private $origine;
+    public $origine;
     /**
      * Get the value of idMenu
      *
@@ -137,6 +144,63 @@ class Menu
     public function __toString()
     {
         return $this->categorie;
+    }
+   
+
+    public function __construct()
+    {
+        $this->produits = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection|Produit[]
+     */
+    public function getProduits(): Collection
+    {
+        return $this->produits;
+    }
+     /**
+     * Get the image of the first product associated with this menu.
+     *
+     * @return string|null
+     */
+    public function getImageProduit(): ?string
+    {
+        $product = $this->produits->first();
+        return $product ? $product->getImageProduit() : null;
+    }
+
+    /**
+     * Get the name of the first product associated with this menu.
+     *
+     * @return string|null
+     */
+    public function getNomProduit(): ?string
+    {
+        $product = $this->produits->first();
+        return $product ? $product->getNomProduit() : null;
+    }
+
+    /**
+     * Get the description of the first product associated with this menu.
+     *
+     * @return string|null
+     */
+    public function getDescriptionProduit(): ?string
+    {
+        $product = $this->produits->first();
+        return $product ? $product->getDescriptionProduit() : null;
+    }
+
+    /**
+     * Get the price of the first product associated with this menu.
+     *
+     * @return float|null
+     */
+    public function getPrixProduit(): ?float
+    {
+        $product = $this->produits->first();
+        return $product ? $product->getPrixProduit() : null;
     }
 
 }
