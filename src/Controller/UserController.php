@@ -110,7 +110,7 @@ class UserController extends AbstractController
             $em->flush();
             return $this->redirectToRoute("app_user_front");
         }
-        return $this->renderForm('user/editFront.html.twig', 
+        return $this->renderForm('user/edit.html.twig', 
         [
             'user' => $user,
             'form' => $form,
@@ -200,17 +200,14 @@ class UserController extends AbstractController
     }
 
     #[Route('/home', name: 'app_home', methods: ["GET", "POST"])]
-    public function home(Request $request): Response
-{
-    $user = $this->getUser();
-    $warningMessage = $request->query->get('warningMessage');
+    public function home(): Response
+    {
+        $user = $this->getUser();
 
-    return $this->render('user/home.html.twig', [
-        'user' => $user,
-        'warningMessage' => $warningMessage,
-    ]);
-}
-
+        return $this->render('user/home.html.twig', [
+            'user' => $user,
+        ]);
+    }
 
     #[Route('/profil/{id}', name: 'app_profil')]
     public function profil($id, UserRepository $UserRepository): Response

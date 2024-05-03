@@ -34,53 +34,50 @@ class GoogleAuthenticator extends AbstractAuthenticator
     public function authenticate(Request $request): Passport
 {
     $googleClient = $this->clientRegistry->getClient('google');
-    
-    // Obtenez le jeton d'accès
+
+    // Get the access token
     $accessToken = $googleClient->getAccessToken();
-    
-    // Vérifiez si le jeton d'accès est valide
+
+    // Check if the access token is valid
     if ($accessToken->hasExpired()) {
-        // Gérer l'expiration du jeton
+        // Handle token expiration
     }
-    
+
     /** @var GoogleUser $googleUser */
     $googleUser = $googleClient->fetchUserFromToken($accessToken);
-    
-    // Recherchez ou créez l'utilisateur dans votre base de données en utilisant l'adresse e-mail
+
+    // Find or create the user in your database using name and last name
     $user = $this->entityManager->getRepository(User::class)->findOneBy([
-        'email' => $googleUser->getEmail(),
+        'nom' => $googleUser->getFirstName(),
+        'prenom' => $googleUser->getLastName(),
     ]);
-    
+
     if (!$user) {
-        // Si l'utilisateur n'existe pas, créez-le
         $user = new User();
-        // Définissez les propriétés de l'utilisateur à partir de GoogleUser
+        // Set user properties from GoogleUser
         $user->setNom($googleUser->getFirstName());
         $user->setPrenom($googleUser->getLastName());
         $user->setEmail($googleUser->getEmail());
-        $user->setImage($googleUser->getAvatar());
+        // Set default values for other fields
         $user->setRole('CLIENT'); 
         $user->setPassword(''); 
         $user->setNumtel(null); 
         $user->setStatut('ACTIVE');
+
+        // Persist user in the database
         $this->entityManager->persist($user);
         $this->entityManager->flush();
     }
-    
-    return new SelfValidatingPassport(new UserBadge($user->getEmail()));
+
+    return new SelfValidatingPassport(new UserBadge($user->getNom()));
 }
 
 
-
-public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): RedirectResponse
-{
-    $warningMessage = 'Vous avez des infomations manquantes.';
-    
-    // Rediriger après une authentification réussie
-    return new RedirectResponse($this->urlGenerator->generate('app_home', ['warningMessage' => $warningMessage]));
-}
-
-
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): RedirectResponse
+    {
+        // Redirect after successful authentication
+        return new RedirectResponse($this->urlGenerator->generate('app_home'));
+    }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): RedirectResponse
     {
