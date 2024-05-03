@@ -86,7 +86,7 @@ public function updateReclamationStatut(): void
         if ($reclamation->getIdRep()->isEmpty()) {
             $reclamation->setStatut('En attente');
         } else {
-            $reclamation->setStatut('Traitée');
+            $reclamation->setStatut('traitée');
         }
         $this->_em->persist($reclamation);
     }
@@ -95,7 +95,7 @@ public function updateReclamationStatut(): void
 }
 public function updateStats(): void
 {
-    $nbReclamationsTraitees = $this->countByStatut('Traitée');
+    $nbReclamationsTraitees = $this->countByStatut('traitée');
     $nbReclamationsEnAttente = $this->countByStatut('En attente');
 
     // Enregistre les statistiques mises à jour dans la base de données ou utilise-les directement

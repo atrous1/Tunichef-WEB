@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
+use CMEN\GoogleChartsBundle\GoogleCharts\Charts\PieChart;
+use CMEN\GoogleChartsBundle\GoogleCharts\Charts\BarChart;
 
 
 
@@ -95,6 +97,32 @@ class ReclamationBackController extends AbstractController
     return $this->render('backReclamation/edit.html.twig', [
         'reclamation' => $reclamation,
         'form' => $form->createView(),
+    ]);
+}
+ /**
+ * @Route("/stats", name="app_reclamation_stats", methods={"GET"})
+ */
+public function stats(ReclamationRepository $reclamationRepository): Response
+{
+   
+    $nbReclamationsTraitees = $reclamationRepository->countByStatut('traitée');
+
+    $nbReclamationsEnAttente = $reclamationRepository->countByStatut('En attente');
+
+    $chart = new BarChart();
+    $chart->getData()->setArrayToDataTable([
+        ['Statut', 'Nombre'],
+        ['Traitée', $nbReclamationsTraitees],
+        ['En attente', $nbReclamationsEnAttente],
+    ]);
+    $chart->getOptions()->setTitle('Statistiques des Réclamations');
+    $chart->getOptions()->getHAxis()->setTitle('Statut');
+    $chart->getOptions()->getVAxis()->setTitle('Nombre');
+
+    return $this->render('reclamation/stat.html.twig', [
+        'piechart' => $chart, // Utilise piechart au lieu de chart si tu utilises un diagramme à secteurs
+        'nbReclamationsTraitees' => $nbReclamationsTraitees,
+        'nbReclamationsEnAttente' => $nbReclamationsEnAttente,
     ]);
 }
 

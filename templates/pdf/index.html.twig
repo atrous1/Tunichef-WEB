@@ -6,7 +6,7 @@
     <style>
         /* Add styles for the logo */
         .logo {
-            width: 200px;
+            width: 50px;
             height: auto;
             margin: 0 auto;
             display: block;
@@ -34,7 +34,7 @@
 </head>
 
 <body>
-    <img src="{{ asset('assets/images/LOGO.jpg') }}" alt="LOGO" class="logo">
+    <img src="{{ asset('public\assets\images\LOGO.jpg') }}" alt="LOGO" class="logo">
     <div style="display: block; margin-bottom: 10px; background-color: hsl(213, 38%, 89%); text-align: center;">
         <h1>Liste des Réclamations</h1>
         <table>
@@ -52,7 +52,7 @@
                     <tr>
                         <td>{{ reclamation.description }}</td>
                         <td>{{ reclamation.dateRec ? reclamation.dateRec|date('Y-m-d') : '' }}</td>
-                        <td>{{ reclamation.statut }} ({% if reclamation.statut != statut %}{{ statut }}{% endif %})</td>
+                        <td>{{ reclamation.statut }}</td>
                         <td>{{ reclamation.avis }}</td>
                     </tr>
                 {% endfor %}

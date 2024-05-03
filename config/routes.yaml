@@ -1,7 +1,7 @@
 
 app_reclamation_stats:
     path: /stats
-    controller: App\Controller\ReclamationController::stats
+    controller: App\Controller\ReclamationBackController::stats
     methods: ['GET']
 
 app_reclamation_downloadPdfAll:

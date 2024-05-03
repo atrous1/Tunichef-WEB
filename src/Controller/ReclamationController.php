@@ -12,12 +12,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use CMEN\GoogleChartsBundle\GoogleCharts\Charts\PieChart;
-use CMEN\GoogleChartsBundle\GoogleCharts\Charts\BarChart;
+use Knp\Snappy\Pdf;
 use App\Response\PdfResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 
 
@@ -120,68 +121,45 @@ public function index(Request $request, ReclamationRepository $reclamationReposi
     }
      
     
- /**
- * @Route("/stats", name="app_reclamation_stats", methods={"GET"})
- */
-public function stats(ReclamationRepository $reclamationRepository): Response
-{
-    // Récupérer le nombre de réclamations traitées
-    $nbReclamationsTraitees = $reclamationRepository->countByStatut('Traitée');
 
-    // Récupérer le nombre de réclamations en attente
-    $nbReclamationsEnAttente = $reclamationRepository->countByStatut('En attente');
-
-    // Créer le diagramme à barres
-    $chart = new BarChart();
-    $chart->getData()->setArrayToDataTable([
-        ['Statut', 'Nombre'],
-        ['Traitée', $nbReclamationsTraitees],
-        ['En attente', $nbReclamationsEnAttente],
-    ]);
-    $chart->getOptions()->setTitle('Statistiques des Réclamations');
-    $chart->getOptions()->getHAxis()->setTitle('Statut');
-    $chart->getOptions()->getVAxis()->setTitle('Nombre');
-
-    // Passer le diagramme au template pour affichage
-    return $this->render('reclamation/stat.html.twig', [
-        'piechart' => $chart, // Utilise piechart au lieu de chart si tu utilises un diagramme à secteurs
-        'nbReclamationsTraitees' => $nbReclamationsTraitees,
-        'nbReclamationsEnAttente' => $nbReclamationsEnAttente,
-    ]);
-}
 
 
 /**
  * @Route("/download-pdf-all", name="app_reclamation_downloadPdfAll", methods={"GET"})
  */
-public function downloadPdfAll(ReclamationRepository $reclamationRepository, PdfGeneratorService $pdfGeneratorService): Response
+public function downloadPdfAll(ReclamationRepository $reclamationRepository): Response
 {
-    // Récupérer toutes les réclamations depuis le repository
+    // Configuration de Dompdf
+    $options = new Options();
+    $options->set('isHtml5ParserEnabled', true);
+    $options->set('isPhpEnabled', true);
+    $options->set('isRemoteEnabled', true); // Autorise l'accès aux ressources externes
+    $dompdf = new Dompdf($options);
+
+    // Récupérer les réclamations depuis le repository
     $reclamations = $reclamationRepository->findAll();
 
-    // Générer le contenu PDF avec toutes les réclamations
-    $pdfContent = $pdfGeneratorService->generatePdf($reclamations);
-
-    // Retourner le PDF en tant que réponse
-   /* return new Response(
-        $pdfContent,
-        
-        Response::HTTP_OK,
-        [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="reclamations.pdf"',
-        ]
-        
-    );
-    */
-    return $this->render('pdf/index.html.twig', [
+    // Générer le contenu HTML avec le logo et les réclamations
+    $htmlContent = $this->renderView('pdf/index.html.twig', [
         'reclamations' => $reclamations,
-        
     ]);
 
+    // Charger le contenu HTML dans Dompdf
+    $dompdf->loadHtml($htmlContent);
+
+    // Rendre le PDF
+    $dompdf->render();
+
+    // Récupérer le contenu du PDF
+    $pdfContent = $dompdf->output();
+
+    // Créer une réponse PDF à télécharger
+    $response = new Response($pdfContent);
+
+    // Définir les en-têtes pour le téléchargement du PDF
+    $response->headers->set('Content-Type', 'application/pdf');
+    $response->headers->set('Content-Disposition', 'attachment; filename="reclamations.pdf"');
+
+    return $response;
 }
-
-
-
-
 }
