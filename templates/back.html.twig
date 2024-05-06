@@ -53,7 +53,6 @@
 
 				<nav class="sidebar sidebar-offcanvas" id="sidebar">
 					<div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-						<a class="sidebar-brand brand-logo" href="index.html"><img src="{{asset('assets/images/logo.svg')}}" alt="logo"/></a>
 						<a class="sidebar-brand brand-logo-mini" href="index.html"><img src="{{asset('assets/images/logo-mini.svg')}}" alt="logo"/></a>
 					</div>
 					<ul class="nav">
@@ -61,11 +60,11 @@
 							<div class="profile-desc">
 								<div class="profile-pic">
 									<div class="count-indicator">
-										<img class="img-xs rounded-circle " src="{{asset('assets/images/faces/face15.jpg')}}" alt="">
+										<img class="img-xs rounded-circle " src="{{asset('assets/images/faces/logo.jpg')}}" alt="">
 										<span class="count bg-success"></span>
 									</div>
 									<div class="profile-name">
-										<h5 class="mb-0 font-weight-normal">Henry Klein</h5>
+										<h5 class="mb-0 font-weight-normal">ADMIN</h5>
 										<span>Gold Member</span>
 									</div>
 								</div>
@@ -108,6 +107,7 @@
 								</div>
 							</div>
 						</li>
+
 						<li class="nav-item nav-category">
 							<span class="nav-link">Navigation</span>
 						</li>
@@ -120,67 +120,120 @@
 							</a>
 						</li>
 						<li class="nav-item menu-items">
-							<a class="nav-link" href="{{path('app_menu_index')}}">
-								<span class="menu-icon">
-									<i class="mdi mdi-table-large"></i>
-								</span>
-								<span class="menu-title">menu</span>
-							</a>
-						</li>
-						<li class="nav-item menu-items">
-							<a class="nav-link" href="{{path('app_produit_index')}}">
+							<a class="nav-link" data-bs-toggle="collapse" href="#user" aria-expanded="false" aria-controls="user">
 								<span class="menu-icon">
 									<i class="mdi mdi-contacts"></i>
 								</span>
-								<span class="menu-title">produit</span>
-							</a>
-						</li>
-						<li class="nav-item menu-items">
-							<a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
-								<span class="menu-icon">
-									<i class="mdi mdi-security"></i>
-								</span>
-								<span class="menu-title">User Pages</span>
+								<span class="menu-title">Gestion User</span>
 								<i class="menu-arrow"></i>
 							</a>
-							<div class="collapse" id="auth">
+							<div class="collapse" id="user">
 								<ul class="nav flex-column sub-menu">
 									<li class="nav-item">
-										<a class="nav-link" href="{{asset('pages/samples/blank-page.html')}}">
-											Blank Page
-										</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link" href="{{asset('pages/samples/error-404.html')}}">
-											404
-										</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link" href="{{asset('pages/samples/error-500.html')}}">
-											500
-										</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link" href="{{asset('pages/samples/login.html')}}">
-											Login
-										</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link" href="{{asset('pages/samples/register.html')}}">
-											Register
-										</a>
+										<a class="nav-link" href="{{ path('app_user_back') }}">
+
+											Users</a>
 									</li>
 								</ul>
 							</div>
 						</li>
+
 						<li class="nav-item menu-items">
-							<a class="nav-link" href="{{asset('http://www.bootstrapdash.com/demo/corona-free/jquery/documentation/documentation.html')}}">
+							<a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+								<span class="menu-icon">
+									<i class="mdi mdi-laptop"></i>
+								</span>
+								<span class="menu-title">Gestion Produit</span>
+								<i class="menu-arrow"></i>
+							</a>
+							<div class="collapse" id="ui-basic">
+								<ul class="nav flex-column sub-menu">
+									<li class="nav-item">
+										<a class="nav-link" href="{{path('app_menu_index')}}">
+
+											Menu</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="{{path('app_produit_index')}}">
+											Produit</a>
+									</li>
+								</ul>
+							</div>
+						</li>
+
+						<li class="nav-item menu-items">
+							<a class="nav-link" data-bs-toggle="collapse" href="#rec" aria-expanded="false" aria-controls="rec">
 								<span class="menu-icon">
 									<i class="mdi mdi-file-document-box"></i>
 								</span>
-								<span class="menu-title">Documentation</span>
+								<span class="menu-title">Gestion Reclamation</span>
+								<i class="menu-arrow"></i>
 							</a>
+							<div class="collapse" id="rec">
+								<ul class="nav flex-column sub-menu">
+									<li class="nav-item">
+										<a class="nav-link" href="">
+
+											reclamation</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="">
+											reponse</a>
+									</li>
+								</ul>
+							</div>
 						</li>
+
+						<li class="nav-item menu-items">
+							<a class="nav-link" data-bs-toggle="collapse" href="#com" aria-expanded="false" aria-controls="com">
+								<span class="menu-icon">
+									<i class="mdi mdi-playlist-play"></i>
+								</span>
+								<span class="menu-title">Gestion Commande</span>
+								<i class="menu-arrow"></i>
+							</a>
+							<div class="collapse" id="com">
+								<ul class="nav flex-column sub-menu">
+									<li class="nav-item">
+										<a class="nav-link" href="{{ path('app_reservationBack') }}">
+
+											reservation</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="{{ path('app_commandeBack') }}">
+											commande</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="">
+											commande line</a>
+									</li>
+								</ul>
+							</div>
+						</li>
+
+						<li class="nav-item menu-items">
+							<a class="nav-link" data-bs-toggle="collapse" href="#even" aria-expanded="false" aria-controls="even">
+								<span class="menu-icon">
+									<i class="mdi mdi-table-large"></i>
+								</span>
+								<span class="menu-title">Gestion Evenement</span>
+								<i class="menu-arrow"></i>
+							</a>
+							<div class="collapse" id="even">
+								<ul class="nav flex-column sub-menu">
+									<li class="nav-item">
+										<a class="nav-link" href="">
+
+											evenement</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="">
+											promotion</a>
+									</li>
+								</ul>
+							</div>
+						</li>
+
 					</ul>
 				</nav>
 				<!-- partial -->
@@ -352,8 +405,8 @@
 								<li class="nav-item dropdown">
 									<a class="nav-link" id="profileDropdown" href="#" data-bs-toggle="dropdown">
 										<div class="navbar-profile">
-											<img class="img-xs rounded-circle" src="{{asset('assets/images/faces/face15.jpg')}}" alt="">
-											<p class="mb-0 d-none d-sm-block navbar-profile-name">Henry Klein</p>
+											<img class="img-xs rounded-circle" src="{{asset('assets/images/faces/logo.jpg')}}" alt="">
+											<p class="mb-0 d-none d-sm-block navbar-profile-name">admin</p>
 											<i class="mdi mdi-menu-down d-none d-sm-block"></i>
 										</div>
 									</a>

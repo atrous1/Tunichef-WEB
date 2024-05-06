@@ -6,28 +6,87 @@
 {% block content %}
 	<div class="container">
 		<h1 class="my-4">Kids Products</h1>
-		<div class="row">
-			<div class="col-md-6">
-				<ul class="list-group">
-					{% for product in products %}
-						<div class="col mb-4">
-							<div class="card">
-								<img src="{{ asset('uploads/' ~ product.imageProduit) }}" width="150" height="150">
-								<div class="card-body">
-									<h5 class="card-title">{{ product.nomProduit }}</h5>
-									<p class="card-text">{{ product.descriptionProduit }}</p>
-									<p><img src="{{ product.qrCode }}" width="123" height="100"/></p>
-									<p class="card-text">
-										<small class="text-muted">Price:
-											{{ product.prixProduit }}
-											TND</small>
-									</p>
-								</div>
-							</div>
-						</div>
-					{% endfor %}
-				</ul>
+		<!-- Zone de texte moderne pour la recherche -->
+		<div class="input-group mb-3">
+			<input type="text" id="searchInput" class="form-control" placeholder="Search for products..." onkeyup="searchProducts()">
+			<div class="input-group-append">
+				<button class="btn btn-primary" type="button">Search</button>
 			</div>
 		</div>
+		<!-- Fin de la zone de texte moderne pour la recherche -->
+
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				<div class="row row-cols-4">
+					{% for items in pagination|batch(4) %}
+						{% for item in items %}
+							<div class="col mb-4">
+								<div class="card">
+									<img src="{{ asset('uploads/' ~ item.imageProduit) }}" class="card-img-top" alt="Product Image" width="150" height="150">
+									<div class="card-body">
+										<h5 class="card-title">{{ item.nomProduit }}</h5>
+										<p class="card-text">{{ item.descriptionProduit }}</p>
+										<p><img src="{{ item.qrCode }}" width="123" height="100"/></p>
+										<p class="card-text">
+											<small class="text-muted">Price:
+												{{ item.prixProduit }}
+												TND</small>
+										</p>
+										<a href="{{ path('product_detail', {'id': item.id}) }}" class="btn btn-primary">View Details</a>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+
+		<!-- Pagination moderne -->
+		<nav aria-label="Page navigation example">
+			<ul class="pagination justify-content-center">
+				{% if pagination.getCurrentPageNumber() > 1 %}
+					<li class="page-item">
+						<a class="page-link" href="{{ path(app.request.attributes.get('_route'), {'page': pagination.getCurrentPageNumber() - 1}) }}">Previous</a>
+					</li>
+				{% endif %}
+				{% for page in 1..pagination.pageCount %}
+					<li class="page-item {% if pagination.getCurrentPageNumber() == page %}active{% endif %}">
+						<a class="page-link" href="{{ path(app.request.attributes.get('_route'), {'page': page}) }}">{{ page }}</a>
+					</li>
+				{% endfor %}
+				{% if pagination.getCurrentPageNumber() < pagination.pageCount %}
+					<li class="page-item">
+						<a class="page-link" href="{{ path(app.request.attributes.get('_route'), {'page': pagination.getCurrentPageNumber() + 1}) }}">Next</a>
+					</li>
+				{% endif %}
+			</ul>
+		</nav>
+		<!-- Fin de la pagination moderne -->
 	</div>
+
+	<script>
+		function searchProducts() {
+var input,
+filter,
+cards,
+card,
+productName,
+i,
+txtValue;
+input = document.getElementById("searchInput");
+filter = input.value.toUpperCase();
+cards = document.getElementsByClassName("card");
+for (i = 0; i < cards.length; i++) {
+card = cards[i];
+productName = card.getElementsByClassName("card-title")[0];
+txtValue = productName.textContent || productName.innerText;
+if (txtValue.toUpperCase().indexOf(filter) > -1) {
+card.style.display = "";
+} else {
+card.style.display = "none";
+}
+}
+}
+	</script>
 {% endblock %}

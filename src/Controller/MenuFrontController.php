@@ -10,7 +10,8 @@ use Endroid\QrCode\Writer\Result\PngResult;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Builder\BuilderInterface; 
-
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -32,141 +33,223 @@ class MenuFrontController extends AbstractController
     }
     private function convertQrCodeResultToString(PngResult $qrCodeResult): string
     {
-        // Convert the result to a string (e.g., base64 encode the image)
-        // Adjust this logic based on how you want to represent the QR code data
         return 'data:image/png;base64,' . base64_encode($qrCodeResult->getString());
     }
     #[Route('/kids', name: 'app_kids_index', methods: ['GET'])]
-    public function kids(MenuRepository $menuRepository): Response
-    {
-        // Get all menus with the category "Kids"
-        $menus = $menuRepository->findBy(['categorie' => 'Kids']);
+public function kids(MenuRepository $menuRepository, PaginatorInterface $paginator, Request $request): Response
+{
+    $menus = $menuRepository->findBy(['categorie' => 'Kids']);
 
-        $products = [];
+    $products = [];
 
-        // Generate QR codes for each product
-        foreach ($menus as $menu) {
-            foreach ($menu->getProduits() as $product) {
-                // Customize the QR code data (e.g., using product name)
-                $qrCodeResult = $this->qrCodeBuilder
-                    ->data($product->getNomProduit())
-                    ->build();
+    // Générer les QR codes pour chaque produit
+    foreach ($menus as $menu) {
+        foreach ($menu->getProduits() as $product) {
+            // Customize the QR code data (e.g., using product name)
+            $qrCodeResult = $this->qrCodeBuilder
+                ->data($product->getNomProduit())
+                ->build();
 
-                // Convert QR code result to string representation
-                $qrCodeString = $this->convertQrCodeResultToString($qrCodeResult);
+            // Convert QR code result to string representation
+            $qrCodeString = $this->convertQrCodeResultToString($qrCodeResult);
 
-                // Add QR code string to the product entity
-                $product->setQrCode($qrCodeString);
+            // Ajouter le QR code à son produit correspondant
+            $product->setQrCode($qrCodeString);
 
-                // Add product details to the array
-                $products[] = [
-                    'nomProduit' => $product->getNomProduit(),
-                    'descriptionProduit' => $product->getDescriptionProduit(),
-                    'imageProduit' => $product->getImageProduit(),
-                    'prixProduit' => $product->getPrixProduit(),
-                    'qrCode' => $qrCodeString, // Include QR code in product details
-                ];
-            }
+            // Ajouter le produit et son QR code au tableau
+            $products[] = [
+                'id' => $product->getIdProduit(),
+                'nomProduit' => $product->getNomProduit(),
+                'descriptionProduit' => $product->getDescriptionProduit(),
+                'imageProduit' => $product->getImageProduit(),
+                'prixProduit' => $product->getPrixProduit(),
+                'qrCode' => $qrCodeString,
+            ];
         }
-
-        // Render the view with the products
-        return $this->render('front/kids.html.twig', [
-            'products' => $products,
-        ]);
     }
+
+    // Paginer les résultats
+    $pagination = $paginator->paginate(
+        $products,
+        $request->query->getInt('page', 1), // Numéro de page
+        6 // Nombre d'éléments par page (2 lignes * 3 produits par ligne)
+    );
+
+    // Rendre la vue avec la pagination
+    return $this->render('front/kids.html.twig', [
+        'pagination' => $pagination,
+    ]);
+}
+
     
-    #[Route('/tunisian', name: 'app_tunisian_index', methods: ['GET'])]
-    public function tunisian(): Response
-    {
-       // Get the Doctrine EntityManager
-       $em = $this->getDoctrine()->getManager();
+    
+#[Route('/tunisian', name: 'app_tunisian_index', methods: ['GET'])]
+public function tunisian(MenuRepository $menuRepository, PaginatorInterface $paginator, Request $request): Response
+{
+    // Récupérer tous les menus de la catégorie "Tunisian"
+    $menus = $menuRepository->findBy(['categorie' => 'Tunisian']);
 
-       // Get the menus with the category "Kids"
-       $menus = $em->getRepository(Menu::class)->findBy(['categorie' => 'Tunisian']);
+    $products = [];
 
-       // Array to store products
-       $products = [];
+    // Générer les QR codes pour chaque produit
+    foreach ($menus as $menu) {
+        foreach ($menu->getProduits() as $product) {
+            // Customize the QR code data (e.g., using product name)
+            $qrCodeResult = $this->qrCodeBuilder
+                ->data($product->getNomProduit())
+                ->build();
 
-       // Iterate through menus to fetch their associated products
-       foreach ($menus as $menu) {
-           // Get products associated with this menu
-           $menuProducts = $menu->getProduits();
+            // Convert QR code result to string representation
+            $qrCodeString = $this->convertQrCodeResultToString($qrCodeResult);
 
-           // Append products to the products array
-           foreach ($menuProducts as $product) {
-               $products[] = [
-                   'nomProduit' => $product->getNomProduit(),
-                   'descriptionProduit' => $product->getDescriptionProduit(),
-                   'imageProduit' => $product->getImageProduit(),
-                   'prixProduit' => $product->getPrixProduit(),
-                   
-               ];
-           }
-       }
-       return $this->render('front/tunisian.html.twig', [
-           'products' => $products,
-       ]);
-    }
+            // Ajouter le QR code à son produit correspondant
+            $product->setQrCode($qrCodeString);
 
-    #[Route('/european', name: 'app_european_index', methods: ['GET'])]
-    public function european(): Response
-    {
-       $em = $this->getDoctrine()->getManager();
-
-       $menus = $em->getRepository(Menu::class)->findBy(['categorie' => 'European']);
-
-       $products = [];
-
-       foreach ($menus as $menu) {
-           $menuProducts = $menu->getProduits();
-
-           foreach ($menuProducts as $product) {
-               $products[] = [
-                   'nomProduit' => $product->getNomProduit(),
-                   'descriptionProduit' => $product->getDescriptionProduit(),
-                   'imageProduit' => $product->getImageProduit(),
-                   'prixProduit' => $product->getPrixProduit(),
-               ];
-           }
-       }
-
-       return $this->render('front/european.html.twig', [
-           'products' => $products,
-       ]);
-    }
-
-    #[Route('/oriental', name: 'app_oriental_index', methods: ['GET'])]
-    public function oriental(): Response
-    {
-        // Get the Doctrine EntityManager
-        $em = $this->getDoctrine()->getManager();
-
-        // Get the menus with the category "Kids"
-        $menus = $em->getRepository(Menu::class)->findBy(['categorie' => 'Oriental']);
-
-        // Array to store products
-        $products = [];
-
-        // Iterate through menus to fetch their associated products
-        foreach ($menus as $menu) {
-            // Get products associated with this menu
-            $menuProducts = $menu->getProduits();
-
-            // Append products to the products array
-            foreach ($menuProducts as $product) {
-                $products[] = [
-                    'nomProduit' => $product->getNomProduit(),
-                    'descriptionProduit' => $product->getDescriptionProduit(),
-                    'imageProduit' => $product->getImageProduit(),
-                    'prixProduit' => $product->getPrixProduit(),
-                    // Add other product properties as needed
-                ];
-            }
+            // Ajouter le produit et son QR code au tableau
+            $products[] = [
+                'id' => $product->getIdProduit(),
+                'nomProduit' => $product->getNomProduit(),
+                'descriptionProduit' => $product->getDescriptionProduit(),
+                'imageProduit' => $product->getImageProduit(),
+                'prixProduit' => $product->getPrixProduit(),
+                'qrCode' => $qrCodeString,
+            ];
         }
-
-        // Render the view with the products
-        return $this->render('front/oriental.html.twig', [
-            'products' => $products,
-        ]);
     }
+
+    // Paginer les résultats
+    $pagination = $paginator->paginate(
+        $products,
+        $request->query->getInt('page', 1), // Numéro de page
+        6 // Nombre d'éléments par page (2 lignes * 3 produits par ligne)
+    );
+
+    // Rendre la vue avec la pagination
+    return $this->render('front/tunisian.html.twig', [
+        'pagination' => $pagination,
+    ]);
+}
+
+
+#[Route('/european', name: 'app_european_index', methods: ['GET'])]
+public function european(MenuRepository $menuRepository, PaginatorInterface $paginator, Request $request): Response
+{
+    // Récupérer tous les menus de la catégorie "European"
+    $menus = $menuRepository->findBy(['categorie' => 'European']);
+
+    $products = [];
+
+    // Générer les QR codes pour chaque produit
+    foreach ($menus as $menu) {
+        foreach ($menu->getProduits() as $product) {
+            // Customize the QR code data (e.g., using product name)
+            $qrCodeResult = $this->qrCodeBuilder
+                ->data($product->getNomProduit())
+                ->build();
+
+            // Convert QR code result to string representation
+            $qrCodeString = $this->convertQrCodeResultToString($qrCodeResult);
+
+            // Ajouter le QR code à son produit correspondant
+            $product->setQrCode($qrCodeString);
+
+            // Ajouter le produit et son QR code au tableau
+            $products[] = [
+                'id' => $product->getIdProduit(),
+                'nomProduit' => $product->getNomProduit(),
+                'descriptionProduit' => $product->getDescriptionProduit(),
+                'imageProduit' => $product->getImageProduit(),
+                'prixProduit' => $product->getPrixProduit(),
+                'qrCode' => $qrCodeString,
+            ];
+        }
+    }
+
+    // Paginer les résultats
+    $pagination = $paginator->paginate(
+        $products,
+        $request->query->getInt('page', 1), // Numéro de page
+        6 // Nombre d'éléments par page (2 lignes * 3 produits par ligne)
+    );
+
+    // Rendre la vue avec la pagination
+    return $this->render('front/european.html.twig', [
+        'pagination' => $pagination,
+    ]);
+}
+
+#[Route('/oriental', name: 'app_oriental_index', methods: ['GET'])]
+public function oriental(MenuRepository $menuRepository, PaginatorInterface $paginator, Request $request): Response
+{
+    // Récupérer tous les menus de la catégorie "Oriental"
+    $menus = $menuRepository->findBy(['categorie' => 'Oriental']);
+
+    $products = [];
+
+    // Générer les QR codes pour chaque produit
+    foreach ($menus as $menu) {
+        foreach ($menu->getProduits() as $product) {
+            // Customize the QR code data (e.g., using product name)
+            $qrCodeResult = $this->qrCodeBuilder
+                ->data($product->getNomProduit())
+                ->build();
+
+            // Convert QR code result to string representation
+            $qrCodeString = $this->convertQrCodeResultToString($qrCodeResult);
+
+            // Ajouter le QR code à son produit correspondant
+            $product->setQrCode($qrCodeString);
+
+            // Ajouter le produit et son QR code au tableau
+            $products[] = [
+                'id' => $product->getIdProduit(),
+                'nomProduit' => $product->getNomProduit(),
+                'descriptionProduit' => $product->getDescriptionProduit(),
+                'imageProduit' => $product->getImageProduit(),
+                'prixProduit' => $product->getPrixProduit(),
+                'qrCode' => $qrCodeString,
+            ];
+        }
+    }
+
+    // Paginer les résultats
+    $pagination = $paginator->paginate(
+        $products,
+        $request->query->getInt('page', 1), // Numéro de page
+        6 // Nombre d'éléments par page (2 lignes * 3 produits par ligne)
+    );
+
+    // Rendre la vue avec la pagination
+    return $this->render('front/oriental.html.twig', [
+        'pagination' => $pagination,
+    ]);
+}
+
+#[Route('/front/detail/{id}', name: 'product_detail', methods: ['GET'])]
+public function productDetail($id): Response
+{
+    // Récupérer le produit par son ID
+    $product = $this->getDoctrine()->getRepository(Produit::class)->find($id);
+
+    // Vérifier si le produit existe
+    if (!$product) {
+        throw $this->createNotFoundException('Product not found');
+    }
+
+    // Générer le QR code pour le produit
+    $qrCodeResult = $this->qrCodeBuilder
+        ->data($product->getNomProduit())
+        ->build();
+
+    // Convertir le résultat du QR code en chaîne
+    $qrCodeString = $this->convertQrCodeResultToString($qrCodeResult);
+
+    // Rendre la vue avec les détails du produit et le QR code
+    return $this->render('front/detail.html.twig', [
+        'product' => $product,
+        'qrCode' => $qrCodeString,
+    ]);
+}
+
+
 }

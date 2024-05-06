@@ -28,4 +28,21 @@ class MenuRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    
+     /**
+     * Count products associated with menus by category.
+     *
+     * @param string $category
+     * @return mixed
+     */
+    public function countProductsByCategory(string $category)
+    {
+        $qb = $this->createQueryBuilder('m')
+            ->select('COUNT(p) as productCount')
+            ->leftJoin('m.produits', 'p')
+            ->andWhere('m.categorie = :category')
+            ->setParameter('category', $category);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }

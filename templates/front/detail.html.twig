@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Product Detail
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				<div class="card">
+					<div class="row no-gutters">
+						<div class="col-md-4">
+							<img src="{{ asset('uploads/' ~ product.imageProduit) }}" class="card-img" alt="Product Image">
+						</div>
+						<div class="col-md-8">
+							<div class="card-body">
+								<h5 class="card-title">{{ product.nomProduit }}</h5>
+								<p class="card-text">{{ product.descriptionProduit }}</p>
+								<p class="card-text">Price:
+									{{ product.prixProduit }}
+									TND</p>
+								<p><img src="{{ qrCode }}" width="200" height="200" alt="QR Code"></p>
+
+								<!-- Vous pouvez ajouter d'autres détails du produit ici -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

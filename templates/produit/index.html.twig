@@ -10,17 +10,18 @@
 		<div class="d-flex">
 			<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search ..." class="form-control" id="search-input">
 		</div>
-
 	</div>
+
 	<div>
 		<h1>Product Statistics</h1>
 		<p>Total Number of Products:
 			{{ totalProducts }}</p>
 	</div>
-	<a href="{{ path('app_produit_export_excel') }}" class="btn btn-success">Export to Excel</a>
-	<br>
-	<a href="{{ path('app_produit_export_pdf') }}" class="btn btn-danger">Export to PDF</a>
-	<br>
+
+	<a href="{{ path('app_produit_category_stats') }}" class="btn btn-primary">Statistiques</a><br>
+	<a href="{{ path('app_produit_export_excel') }}" class="btn btn-success">Export to Excel</a><br>
+	<a href="{{ path('app_produit_export_pdf') }}" class="btn btn-danger">Export to PDF</a><br>
+
 	<table id="table" class="table table-striped table-bordered">
 		<thead class="thead-dark" id="table">
 			<tr>
@@ -29,8 +30,6 @@
 				<th>DescriptionProduit</th>
 				<th>ImageProduit</th>
 				<th>PrixProduit</th>
-				<!--	<th>LikeProduit</th>
-								<th>DislikeProduit</th> -->
 				<th>Actions</th>
 			</tr>
 		</thead>
@@ -42,8 +41,6 @@
 					<td style="color: white;">{{ produit.descriptionProduit }}</td>
 					<td><img src="{{ asset('uploads/' ~ produit.imageProduit) }}" width="50" height="50"></td>
 					<td style="color: white;">{{ produit.prixProduit }}</td>
-					<!--	<td style="color: white;">{{ produit.likeProduit }}</td>
-										<td style="color: white;">{{ produit.dislikeProduit }}</td> -->
 					<td>
 						<a href="{{ path('app_produit_show', {'idProduit': produit.idProduit}) }}" class="btn btn-info">Show</a>
 						<a href="{{ path('app_produit_edit', {'idProduit': produit.idProduit}) }}" class="btn btn-warning">Edit</a>
@@ -57,7 +54,16 @@
 		</tbody>
 	</table>
 
+
+	<nav aria-label="Page navigation example">
+		<ul class="pagination justify-content-center">
+			{{ knp_pagination_render(produits) }}
+		</ul>
+	</nav>
+
 	<a href="{{ path('app_produit_new') }}" class="btn btn-success">Create new</a>
+
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 	<script>
 		function createPDF() { // Clone the table to not alter the original
@@ -169,4 +175,5 @@ switching = true;
 }
 }
 	</script>
+
 {% endblock %}

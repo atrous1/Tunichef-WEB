@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Produit;
 use App\Form\ProduitType;
+use App\Repository\MenuRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,7 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag; // Add this for ResponseHeaderBag
+use Knp\Component\Pager\PaginatorInterface;
+
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -19,6 +22,59 @@ use Dompdf\Options;
 #[Route('/produit')]
 class ProduitController extends AbstractController
 {
+    #[Route('/category-stats', name: 'app_produit_category_stats')]
+    public function categoryStats(MenuRepository $menuRepository): Response
+    {
+        // Define the categories for which you want to get statistics
+        $categories = ['kids', 'tunisian', 'oriental', 'european'];
+    
+        // Initialize an empty array to store statistics for each category
+        $stats = [];
+    
+        // Loop through each category and fetch statistics
+        foreach ($categories as $category) {
+            $productCount = $menuRepository->countProductsByCategory($category);
+            
+            // Append the statistics to the $stats array
+            $stats[] = [
+                'status' => $category,
+                'count' => $productCount,
+            ];
+        }
+    
+        // Render the Twig template with the stats data
+        return $this->render('produit/category_stats.html.twig', [
+            'stats' => $stats,
+        ]);
+    }
+    
+    #[Route('/', name: 'app_produit_pagination', methods: ['GET'])]
+    public function pagination(Request $request, PaginatorInterface $paginator): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        
+        // Get total number of produits
+        $totalProducts = $entityManager->getRepository(Produit::class)->count([]);
+    
+        // Get all produits query
+        $query = $entityManager->getRepository(Produit::class)->createQueryBuilder('p')
+            ->getQuery();
+    
+        // Paginate the results
+        $produits = $paginator->paginate(
+            $query, // Requête à paginer
+            $request->query->getInt('page', 1), // Numéro de page
+            5 // Nombre d'éléments par page
+        );
+    
+        return $this->render('produit/index.html.twig', [
+            'produits' => $produits,
+            'totalProducts' => $totalProducts,
+        ]);
+    }
+    
+
+
     #[Route('/', name: 'app_produit_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
