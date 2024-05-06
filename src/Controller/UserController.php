@@ -18,6 +18,9 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Form\EditUserBackFormType;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 
 class UserController extends AbstractController
@@ -45,12 +48,31 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/add', name: 'app_user_add')]
-    public function Add(Request $request,UserPasswordEncoderInterface $passwordEncoder)
+    public function Add(Request $request,UserPasswordEncoderInterface $passwordEncoder, ValidatorInterface $validator, FlashBagInterface $flashBag)
     {
         $User = new User();
         $form = $this->createForm(UserFormType::class, $User);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $recaptchaResponse = $request->request->get('g-recaptcha-response');
+
+            // Vérifiez si la réponse ReCaptcha est vide
+            if (empty($recaptchaResponse)) {
+                // Ajoutez un message flash pour indiquer que le ReCaptcha n'est pas coché
+                $flashBag->add('error', 'Veuillez cocher le ReCaptcha.');
+                return $this->redirectToRoute('app_user_add');
+            }
+    
+            // Validez l'entité User
+            $errors = $validator->validate($User);
+            if (count($errors) > 0) {
+                // Gérez les erreurs de validation
+                // Affichez des messages d'erreur ou redirigez avec des erreurs
+                return $this->render('user/signup.html.twig', [
+                    'form' => $form->createView(),
+                    'errors' => $errors,
+                ]);
+            }
             $em = $this->getDoctrine()->getManager();
             $image = $form->get('image')->getData();
             if($image) // ajout image
@@ -110,7 +132,7 @@ class UserController extends AbstractController
             $em->flush();
             return $this->redirectToRoute("app_user_front");
         }
-        return $this->renderForm('user/edit.html.twig', 
+        return $this->renderForm('user/editFront.html.twig', 
         [
             'user' => $user,
             'form' => $form,
@@ -200,14 +222,17 @@ class UserController extends AbstractController
     }
 
     #[Route('/home', name: 'app_home', methods: ["GET", "POST"])]
-    public function home(): Response
-    {
-        $user = $this->getUser();
+    public function home(Request $request): Response
+{
+    $user = $this->getUser();
+    $warningMessage = $request->query->get('warningMessage');
 
-        return $this->render('user/home.html.twig', [
-            'user' => $user,
-        ]);
-    }
+    return $this->render('user/home.html.twig', [
+        'user' => $user,
+        'warningMessage' => $warningMessage,
+    ]);
+}
+
 
     #[Route('/profil/{id}', name: 'app_profil')]
     public function profil($id, UserRepository $UserRepository): Response

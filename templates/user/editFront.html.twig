@@ -11,24 +11,12 @@
     
      <link rel="stylesheet" href="{{ asset('assets/fonts/material-icon/css/material-design-iconic-font.min.css') }}">
      <link rel="stylesheet" href="{{ asset('assets/https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css') }}">
-     <script src="//www.google.com/recaptcha/api.js"></script>
+
     <!-- Main css -->
     
      <link rel="stylesheet" href="{{ asset('assets/css/stylelogin.css') }}">
-    <style>
-    .userrole { 
-        width: 20px:
-        }
-.invalid {
-  color: #842029; 
-  background-color: #f8d7da; 
-  border-color: #f5c2c7; 
-  position: relative;
-  padding: 1rem 1rem;
-  margin-bottom: 1rem;
-  border: 1px solid transparent;
-  border-radius: 0.25rem;
-}
+    <style>.userrole{ width: 20px:
+    }
     
     </style>
 </head>
@@ -42,11 +30,8 @@
             <div class="container">
                 <div class="signup-content">
                     <div class="signup-form">
-                        <h2 class="form-title">Sign up</h2>
+                        <h2 class="form-title">Edit your profile</h2>
                         
-
-
-
     {{ form_start(form, {'attr': {'class': 'register-form', 'novalidate': 'novalidate'}}) }}
     <div class="form-group">
         <label for="{{ form.nom.vars.id }}"><i class="zmdi zmdi-account material-icons-name"></i></label>
@@ -82,29 +67,16 @@
         <label for="{{ form.image.vars.id }}"><i class="zmdi zmdi-book-image"></i></label>
         {{ form_widget(form.image) }}
     </div>
-{% for flash_message in app.session.flashbag.get('error') %}
-    <div class="invalid">{{ flash_message }}</div>
-{% endfor %}
-
-{% for flash_message in app.session.flashbag.get('success') %}
-    <div class="alert alert-success">{{ flash_message }}</div>
-{% endfor %}
-    <div class="form-group">
-    {{ form_label(form.captcha) }}
-    {{ form_widget(form.captcha, {'attr': {'class': 'g-recaptcha', 'data-sitekey': "6LfceI8pAAAAAGS2D1UpONxYyUybT9udsq1bG2qm"}}) }}
-    </div>
     <div class="form-group form-button">
     {{ form_widget(form.Soumettre) }}
 </div>
-
 {{ form_end(form) }}
 
                     </div>
                     <div class="signup-image">
                         <figure><img src="{{ asset('assets/images/signup-image.jpg') }}" alt="sing up image"></figure>
-                        <a href="{{ path('app_login')}}">I am already member</a>
+                        
                     </div>
                 </div>
             </div>
         </section>
-<script src="//www.google.com/recaptcha/api.js"></script>

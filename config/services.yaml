@@ -9,6 +9,7 @@ parameters:
     locale: 'fr' # ou une autre locale disponible sur votre application
     google_api_client_id: YOUR_CLIENT_ID
     google_api_client_secret: YOUR_CLIENT_SECRET
+    google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
 
 services:
 

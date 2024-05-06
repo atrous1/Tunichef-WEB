@@ -12,6 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Beelab\Recaptcha2Bundle\Form\Type\RecaptchaType;
+use Beelab\Recaptcha2Bundle\Validator\Constraints\Recaptcha2;
 
 class UserFormType extends AbstractType
 {
@@ -56,8 +58,14 @@ class UserFormType extends AbstractType
                     ])
                 ],
             ])
+            ->add('captcha', RecaptchaType::class, [
+                'constraints' => new Recaptcha2(),
+            ])
             
-            ->add('Soumettre', SubmitType::class);
+            
+            ->add('Soumettre', SubmitType::class, [
+                'attr' => ['class' => 'form-submit']
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
