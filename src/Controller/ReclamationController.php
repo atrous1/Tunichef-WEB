@@ -62,7 +62,7 @@ public function index(Request $request, ReclamationRepository $reclamationReposi
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($reclamation);
             $entityManager->flush();
-    
+            $reclamationRepository->sms();
             $reclamationRepository->updateReclamationStatut(); // Mise à jour du statut des réclamations
             $reclamationRepository->updateStats(); // Mise à jour des statistiques après ajout
     
@@ -119,10 +119,6 @@ public function index(Request $request, ReclamationRepository $reclamationReposi
 
         return $this->redirectToRoute('app_reclamation_index');
     }
-     
-    
-
-
 
 /**
  * @Route("/download-pdf-all", name="app_reclamation_downloadPdfAll", methods={"GET"})

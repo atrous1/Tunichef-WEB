@@ -35,7 +35,7 @@ class PdfGeneratorService
     private function generateHtmlContent($reclamations)
     {
         // Récupérer le chemin du logo
-        $imagePath = 'public\assets\images\LOGO.jpg'; // Chemin relatif par rapport au répertoire public
+        $imagePath = $this->container->get('router')->getContext()->getBaseUrl() . '/assets/images/LOGO.jpg';
 
         // Générer le contenu HTML avec le logo et les réclamations
         $htmlContent = '
